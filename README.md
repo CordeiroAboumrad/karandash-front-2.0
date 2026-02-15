@@ -1,1 +1,0 @@
-# karandash-front-2.0
