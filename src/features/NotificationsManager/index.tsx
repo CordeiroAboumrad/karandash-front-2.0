@@ -1,15 +1,16 @@
-import BrMessage from '../../components/BrMessage'
+import { ToastBar, Toaster, toast } from "react-hot-toast";
 
-import type { BrValidationState } from './notificationsHelper'
-import { ToastBar, Toaster, toast } from 'react-hot-toast'
+import BrMessage from "../../components/BrMessage";
+
+import type { BrValidationState } from "./notificationsHelper";
 
 const NotificationsManager = () => {
   return (
     <Toaster>
       {(t) => (
-        <ToastBar toast={t} style={{ padding: 0, minWidth: '100%' }}>
+        <ToastBar toast={t} style={{ padding: 0, minWidth: "100%" }}>
           {() => (
-            <div style={{ minWidth: '100%' }}>
+            <div style={{ minWidth: "100%" }}>
               <BrMessage
                 state={t.icon as BrValidationState}
                 message={t.message?.toString()}
@@ -21,7 +22,7 @@ const NotificationsManager = () => {
         </ToastBar>
       )}
     </Toaster>
-  )
-}
+  );
+};
 
-export default NotificationsManager
+export default NotificationsManager;

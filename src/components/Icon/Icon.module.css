@@ -1,0 +1,10 @@
+.badgeIcon {
+  position: relative;
+  display: inline-block;
+}
+
+.badgeIndicator {
+  position: absolute;
+  right: -25%;
+  bottom: -25%;
+}

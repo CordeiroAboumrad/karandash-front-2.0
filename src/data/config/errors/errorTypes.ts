@@ -1,118 +1,124 @@
-import { AxiosError } from 'axios'
-import { pushApiNotification } from '../../../features/NotificationsManager/notificationsHelper'
-import { ErrorRoutes } from '../../../router/routes'
-import { redirectTo } from '../../../router/urlRedirectHelper'
+import type { AxiosError } from "axios";
+
+import { pushApiNotification } from "../../../features/NotificationsManager/notificationsHelper";
+import { ErrorRoutes } from "../../../router/routes";
+import { redirectTo } from "../../../router/urlRedirectHelper";
 
 export type ApiErrorData = {
-  message?: string
-  messages?: { message: string }[]
-  detalhes?: { chave: string; mensagem: string }[]
+  message?: string;
+  messages?: { message: string }[];
+  detalhes?: { chave: string; mensagem: string }[];
   errorJson?: {
-    detalhes?: { chave: string; mensagem: string }[]
-    ticket?: string
-  }
-}
+    detalhes?: { chave: string; mensagem: string }[];
+    ticket?: string;
+  };
+};
 
-export type SdcApiErrorData = ApiErrorData | { message: string }[]
+export type SdcApiErrorData = ApiErrorData | { message: string }[];
 
-export const CLIENT_ERRORS = ['ERR_NETWORK', 'ERR_CANCELED']
-const ERRO_INESPERADO = ['Ocorreu um erro inesperado.']
-const NO_MESSAGE: string[] = []
+export const CLIENT_ERRORS = ["ERR_NETWORK", "ERR_CANCELED"];
+const ERRO_INESPERADO = ["Ocorreu um erro inesperado."];
+const NO_MESSAGE: string[] = [];
 
 export abstract class ApiAbstractError {
-  private messages: string[]
-  private action: (() => void) | undefined
-  private navigation: string | undefined
+  private messages: string[];
+  private action: (() => void) | undefined;
+  private navigation: string | undefined;
 
-  constructor(messages: string[], options?: { action?: () => void; navigation?: string }) {
-    this.messages = messages
-    this.action = options?.action
-    this.navigation = options?.navigation
+  constructor(
+    messages: string[],
+    options?: { action?: () => void; navigation?: string },
+  ) {
+    this.messages = messages;
+    this.action = options?.action;
+    this.navigation = options?.navigation;
   }
 
   public handleError() {
     this.messages.map((message) => {
-      pushApiNotification({ state: 'danger', message })
-    })
+      pushApiNotification({ state: "danger", message });
+    });
   }
 
   public handleRedirect() {
     if (this.navigation) {
-      redirectTo(this.navigation)
+      redirectTo(this.navigation);
     }
   }
 
   public handleAction() {
     if (this.action) {
-      this.action()
+      this.action();
     }
   }
 }
 
 export class ApiImoResponseError extends ApiAbstractError {
   constructor(error: AxiosError<ApiErrorData>) {
-    const errorJson = error.response?.data.errorJson
-    const message = error.response?.data.message
-    const detalhes = error.response?.data.detalhes
+    const errorJson = error.response?.data.errorJson;
+    const message = error.response?.data.message;
+    const detalhes = error.response?.data.detalhes;
 
     if (errorJson?.detalhes?.length) {
-      const messages = errorJson.detalhes.map((e) => e.mensagem)
-      super(messages)
+      const messages = errorJson.detalhes.map((e) => e.mensagem);
+      super(messages);
     } else if (detalhes?.length) {
-      const messages = detalhes.map((e) => e.mensagem)
-      super(messages)
+      const messages = detalhes.map((e) => e.mensagem);
+      super(messages);
     } else if (message) {
-      super([message])
+      super([message]);
     } else {
-      super(ERRO_INESPERADO)
+      super(ERRO_INESPERADO);
     }
   }
 }
 
 export class ApiTicketError extends ApiAbstractError {
   constructor(error: AxiosError<ApiErrorData>) {
-    const ticket = error.response?.data.errorJson?.ticket
-    const messages = ticket ? [`Erro interno - Ticket #${ticket}`] : ['Ocorreu um erro inesperado.']
-    super(messages)
+    const ticket = error.response?.data.errorJson?.ticket;
+    const messages = ticket
+      ? [`Erro interno - Ticket #${ticket}`]
+      : ["Ocorreu um erro inesperado."];
+    super(messages);
   }
 }
 
 export class ApiAuthorizationError extends ApiAbstractError {
   constructor(error: AxiosError<ApiErrorData>) {
-    const m = error.response?.data.message
+    const m = error.response?.data.message;
 
     if (!m) {
-      super(ERRO_INESPERADO)
+      super(ERRO_INESPERADO);
     } else {
-      super([m])
+      super([m]);
     }
   }
 }
 
 export class ApiSdcError extends ApiAbstractError {
   constructor(error: AxiosError<SdcApiErrorData>) {
-    const data = error.response?.data
+    const data = error.response?.data;
 
     if (!data) {
-      super(ERRO_INESPERADO)
+      super(ERRO_INESPERADO);
     } else if (Array.isArray(data)) {
-      super(data?.map((m) => m.message) ?? ERRO_INESPERADO)
+      super(data?.map((m) => m.message) ?? ERRO_INESPERADO);
     } else if (data.errorJson?.detalhes?.length) {
-      const messages = data.errorJson.detalhes.map((e) => e.mensagem)
-      super(messages)
+      const messages = data.errorJson.detalhes.map((e) => e.mensagem);
+      super(messages);
     } else if (data.message) {
-      super([data.message])
+      super([data.message]);
     } else {
-      super(ERRO_INESPERADO)
+      super(ERRO_INESPERADO);
     }
-    return
+    return;
   }
 }
 
 export class ApiUnexpectedError extends ApiAbstractError {
   constructor() {
-    const navigation = `${ErrorRoutes.Unexpected}`
+    const navigation = `${ErrorRoutes.Unexpected}`;
 
-    super(NO_MESSAGE, { navigation })
+    super(NO_MESSAGE, { navigation });
   }
 }
