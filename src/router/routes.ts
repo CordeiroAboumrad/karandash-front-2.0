@@ -1,5 +1,6 @@
 export const RegularRoutes = {
   HOME: "/",
+  LOGIN: "/login",
   CUSTOMERS: "/customers",
   ARTISTS: "/artists",
 };
