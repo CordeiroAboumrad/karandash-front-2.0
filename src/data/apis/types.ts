@@ -24,3 +24,12 @@ export interface Product {
   productYear: string;
   measurements: string;
 }
+
+export interface User {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  primaryEmail: string;
+  username: string;
+  password: string;
+}

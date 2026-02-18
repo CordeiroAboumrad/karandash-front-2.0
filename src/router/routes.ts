@@ -1,4 +1,8 @@
-export const HOME = "/";
+export const RegularRoutes = {
+  HOME: "/",
+  CUSTOMERS: "/customers",
+  ARTISTS: "/artists",
+};
 
 export const ErrorRoutes = {
   Unavailable: "/erro-servico-indisponivel",

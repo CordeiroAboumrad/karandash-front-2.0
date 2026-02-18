@@ -2,12 +2,30 @@
 .kHeader {
   border-bottom: 1px solid black;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 1em;
   font-size: 1em;
   color: black;
   background-color: white;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.navLink {
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  background-color: #f0f0f0;
 }
 
 .headerImage {

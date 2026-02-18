@@ -1,7 +1,7 @@
 import { karandashClient } from "../config/axios";
-import { Artist, Customer, Product } from "./types";
+import { Artist, Customer, Product, User } from "./types";
 
-export const getArtists = async () => {
+export const getAllArtists = async () => {
   const res = await karandashClient.get("/artists");
   return res.data;
 };
@@ -31,6 +31,11 @@ export const registerCustomer = async (customerData: Customer) => {
 
 export const getCustomer = async (id: string) => {
   const res = await karandashClient.get(`/customers/${id}`);
+  return res.data;
+};
+
+export const getAllCustomers = async () => {
+  const res = await karandashClient.get("/customers");
   return res.data;
 };
 
@@ -80,5 +85,41 @@ export const deleteProduct = async (id: number, displayPosition: number) => {
       displayPosition: displayPosition,
     },
   });
+  return res.data;
+};
+
+export const getRole = async (roleName: string) => {};
+
+export const createUser = async (user: User) => {
+  const res = await karandashClient.post("/user", user);
+  return res.data;
+};
+
+export const changeUser = async (user: User) => {
+  const res = await karandashClient.patch("/user", user);
+  return res.data;
+};
+
+export const deleteUser = async (userId: string) => {
+  const res = await karandashClient.delete("/user", {
+    data: {
+      userId: userId,
+    },
+  });
+  return res.data;
+};
+
+export const createAdmin = async (user: User) => {
+  const res = await karandashClient.post("/user/create-admin", user);
+  return res.data;
+};
+
+export const getUserById = async (userId: string) => {
+  const res = await karandashClient.get(`/user/${userId}`);
+  return res.data;
+};
+
+export const getUserByUsername = async (username: string) => {
+  const res = await karandashClient.get(`/user/username/${username}`);
   return res.data;
 };
