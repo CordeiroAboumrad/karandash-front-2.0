@@ -8,12 +8,25 @@ export type NotificationProps = {
   duration?: number
 }
 
-export const pushNotification = ({ state, message, duration = 5_000 }: NotificationProps) => {
-  toast(message, { icon: state, duration })
+const stateToToastMethod = {
+  success: toast.success,
+  info: toast,
+  warning: toast,
+  danger: toast.error,
+}
+
+export const pushNotification = ({
+  state,
+  message,
+  duration = 5_000,
+}: NotificationProps) => {
+  const toastMethod = stateToToastMethod[state]
+  toastMethod(message, { duration })
 }
 
 export const pushApiNotification = ({ state, message }: NotificationProps) => {
-  toast(message, { icon: state, duration: 10_000 })
+  const toastMethod = stateToToastMethod[state]
+  toastMethod(message, { duration: 5000 })
 }
 
 export const clearNotifications = () => {

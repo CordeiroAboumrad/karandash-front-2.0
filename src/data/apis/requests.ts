@@ -1,6 +1,11 @@
 import { karandashClient } from "../config/axios";
 import { Artist, Customer, Product, User } from "./types";
 
+export const login = async (email: string, password: string) => {
+  const res = await karandashClient.post("/auth/login", { email, password });
+  return res.data;
+};
+
 export const getAllArtists = async () => {
   const res = await karandashClient.get("/artists");
   return res.data;
@@ -13,11 +18,6 @@ export const createArtist = async (artistData: Artist) => {
 
 export const adjustArtist = async (artistData: Artist) => {
   const res = await karandashClient.put("/artists", artistData);
-  return res.data;
-};
-
-export const login = async (email: string, password: string) => {
-  const res = await karandashClient.post("/auth/login", { email, password });
   return res.data;
 };
 
