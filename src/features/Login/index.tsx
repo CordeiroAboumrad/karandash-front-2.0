@@ -16,18 +16,18 @@ export const Login = () => {
     },
   })
 
-  const handleSubmit = methods.handleSubmit((data) => {
+  const handleSubmit = methods.handleSubmit(async (data) => {
     const email = data.email
     const password = data.password
     if (!email || !password) return
-    login(email, password)
-      .then((res) => {
-        localStorage.setItem('bearerToken', res.sessionId)
-        navigate(RegularRoutes.HOME)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    try {
+      const res = await login(email, password)
+      localStorage.setItem('bearerToken', res.sessionId)
+      sessionStorage.setItem('isAuthenticated', 'true')
+      navigate(RegularRoutes.HOME)
+    } catch (error) {
+      // Error handled by apiErrorHandler
+    }
   })
 
   return (
