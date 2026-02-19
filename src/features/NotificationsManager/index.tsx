@@ -7,20 +7,23 @@ import type { BrValidationState } from "./notificationsHelper";
 const NotificationsManager = () => {
   return (
     <Toaster>
-      {(t) => (
-        <ToastBar toast={t} style={{ padding: 0, minWidth: "100%" }}>
-          {() => (
-            <div style={{ minWidth: "100%" }}>
-              <BrMessage
-                state={t.icon as BrValidationState}
-                message={t.message?.toString()}
-                onClose={() => toast.dismiss(t.id)}
-                noMargin
-              />
-            </div>
-          )}
-        </ToastBar>
-      )}
+      {(t) => {
+        const state = (typeof t.icon === 'string' ? t.icon : 'danger') as BrValidationState
+        return (
+          <ToastBar toast={t} style={{ padding: 0, minWidth: "100%" }}>
+            {() => (
+              <div style={{ minWidth: "100%" }}>
+                <BrMessage
+                  state={state}
+                  message={t.message?.toString()}
+                  onClose={() => toast.dismiss(t.id)}
+                  noMargin
+                />
+              </div>
+            )}
+          </ToastBar>
+        )
+      }}
     </Toaster>
   );
 };

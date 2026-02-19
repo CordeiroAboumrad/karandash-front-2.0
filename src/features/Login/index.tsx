@@ -19,17 +19,20 @@ export const Login = () => {
     },
   })
 
-  const handleSubmit = methods.handleSubmit(async (data) => {
+  const handleSubmit = methods.handleSubmit((data) => {
     const email = data.email
     const password = data.password
     if (!email || !password) return
-    try {
-      await login(email, password)
-      sessionStorage.setItem('isAuthenticated', 'true')
-      navigate(RegularRoutes.HOME)
-    } catch (error) {
-      // Error is handled by apiErrorHandler, just prevent navigation
-    }
+    const res = login(email, password)
+      .then((res) => {
+        console.log(res)
+        debugger
+        sessionStorage.setItem('isAuthenticated', 'true')
+        navigate(RegularRoutes.HOME)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   })
 
   return (

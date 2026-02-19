@@ -1,7 +1,7 @@
 import type { BrValidationState } from "../../features/NotificationsManager/notificationsHelper";
 
-import ContextMessage from ".";
-import StandardMessage from ".";
+import ContextMessage from "./ContextMessage";
+import StandardMessage from "./StandardMessage";
 
 type MessageType = "standard" | "context";
 
