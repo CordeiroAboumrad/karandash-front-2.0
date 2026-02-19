@@ -65,13 +65,12 @@ export class ApiTicketError extends ApiAbstractError {
 
 export class ApiAuthorizationError extends ApiAbstractError {
   constructor(error: AxiosError<ApiErrorData>) {
-    const m = error.response?.data.message
-
-    if (!m) {
-      super(ERRO_INESPERADO)
-    } else {
-      super([m])
+    const m = error.response?.data.message || 'Unauthorized'
+    const navigation = '/login'
+    const action = () => {
+      localStorage.removeItem('bearerToken')
     }
+    super([m], { navigation, action })
   }
 }
 

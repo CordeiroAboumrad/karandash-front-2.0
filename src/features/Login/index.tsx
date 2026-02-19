@@ -23,7 +23,6 @@ export const Login = () => {
     try {
       const res = await login(email, password)
       localStorage.setItem('bearerToken', res.sessionId)
-      sessionStorage.setItem('isAuthenticated', 'true')
       navigate(RegularRoutes.HOME)
     } catch (error) {
       // Error handled by apiErrorHandler

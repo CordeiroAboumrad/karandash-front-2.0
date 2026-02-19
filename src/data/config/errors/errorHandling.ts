@@ -30,10 +30,6 @@ export const apiErrorHandler = (err: unknown) => {
     handler.handleAction()
     handler.handleRedirect()
 
-    if (err.response.status === 401) {
-      localStorage.removeItem('bearerToken')
-    }
-
     throw err
   }
 }
