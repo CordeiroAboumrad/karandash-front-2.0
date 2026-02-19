@@ -8,6 +8,12 @@ const getRequestConfig = async (config: InternalAxiosRequestConfig) => {
     await fetchConfig();
   }
   config.baseURL = APP_EXTERNAL.BACKEND_URL;
+  
+  const token = localStorage.getItem('bearerToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
   return config;
 };
 

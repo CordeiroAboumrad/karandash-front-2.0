@@ -1,4 +1,5 @@
 .artists {
+  flex-direction: column;
   height: max-content;
   width: 100%;
   display: flex;
