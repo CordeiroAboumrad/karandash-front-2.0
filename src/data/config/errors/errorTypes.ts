@@ -53,26 +53,6 @@ export abstract class ApiAbstractError {
   }
 }
 
-export class ApiImoResponseError extends ApiAbstractError {
-  constructor(error: AxiosError<ApiErrorData>) {
-    const errorJson = error.response?.data.errorJson
-    const message = error.response?.data.message
-    const detalhes = error.response?.data.detalhes
-
-    if (errorJson?.detalhes?.length) {
-      const messages = errorJson.detalhes.map((e) => e.mensagem)
-      super(messages)
-    } else if (detalhes?.length) {
-      const messages = detalhes.map((e) => e.mensagem)
-      super(messages)
-    } else if (message) {
-      super([message])
-    } else {
-      super(ERRO_INESPERADO)
-    }
-  }
-}
-
 export class ApiTicketError extends ApiAbstractError {
   constructor(error: AxiosError<ApiErrorData>) {
     const ticket = error.response?.data.errorJson?.ticket

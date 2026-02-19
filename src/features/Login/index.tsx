@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import { Form, useNavigate } from 'react-router-dom'
-import { RegularRoutes } from '../../router/routes'
-import styles from './Login.module.css'
+import { FormProvider, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import karandashLogo from '../../assets/karandash.png'
 import { login } from '../../data/apis/requests'
-import { FormProvider, useForm } from 'react-hook-form'
 import { LoginForm } from '../../data/schemas/schemas'
+import { RegularRoutes } from '../../router/routes'
+import styles from './Login.module.css'
 
 export const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
   const methods = useForm<LoginForm>({
@@ -23,11 +20,9 @@ export const Login = () => {
     const email = data.email
     const password = data.password
     if (!email || !password) return
-    const res = login(email, password)
+    login(email, password)
       .then((res) => {
-        console.log(res)
-        debugger
-        sessionStorage.setItem('isAuthenticated', 'true')
+        localStorage.setItem('bearerToken', res.sessionId)
         navigate(RegularRoutes.HOME)
       })
       .catch((error) => {
