@@ -1,18 +1,36 @@
-import { useGetCustomersQuery } from "../../data/queries/karandashQueries";
-import styles from "./Customers.module.css";
+import { useGetCustomersQuery } from '../../data/queries/karandashQueries'
+import styles from './Customers.module.css'
 
 export const Customers = () => {
-  const query = useGetCustomersQuery();
+  const customersQuery = useGetCustomersQuery()
 
   return (
     <div className={styles.customers}>
       <h2>Customers</h2>
 
-      {query.isFetching && <p>Loading...</p>}
-      {query.isFetched && query.data?.length === 0 && <p>No customers found.</p>}
-      {query.isFetched && query.data?.length && query.data.length > 0 && (
-        <p>Found {query.data.length} customers.</p>
+      {customersQuery.isFetching && <p>Loading...</p>}
+      {customersQuery.isFetched && customersQuery.data?.length === 0 && (
+        <p>No customers found.</p>
       )}
+      {customersQuery.isFetched &&
+        customersQuery.data &&
+        customersQuery.data.length > 0 && (
+          <div className={styles.customersGrid}>
+            {customersQuery.data.map((customer, index) => (
+              <div key={index} className={styles.customerCard}>
+                <h3>{customer.name}</h3>
+                <div className={styles.customerInfo}>
+                  <p>
+                    <strong>Email:</strong> {customer.email}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {customer.address}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
-  );
-};
+  )
+}

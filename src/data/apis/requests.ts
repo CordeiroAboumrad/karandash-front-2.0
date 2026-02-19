@@ -1,4 +1,5 @@
 import { karandashClient } from '../config/axios'
+import { ArtistsSchema, CustomersSchema } from '../schemas/schemas'
 import { Artist, Customer, Product, User } from './types'
 
 export const login = async (email: string, password: string) => {
@@ -6,7 +7,7 @@ export const login = async (email: string, password: string) => {
   return res.data
 }
 
-export const getAllArtists = async () => {
+export const getAllArtists = async (): Promise<ArtistsSchema> => {
   const res = await karandashClient.get('/artists')
   return res.data
 }
@@ -34,7 +35,7 @@ export const getCustomer = async (id: string) => {
   return res.data
 }
 
-export const getAllCustomers = async () => {
+export const getAllCustomers = async (): Promise<CustomersSchema> => {
   const res = await karandashClient.get('/customers')
   return res.data
 }

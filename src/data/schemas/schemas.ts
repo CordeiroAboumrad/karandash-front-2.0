@@ -1,8 +1,33 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const LoginFormSchema = z.object({
-  email: z.email("Email inválido"),
-  password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-});
+  email: z.email('Email inválido'),
+  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+})
 
-export type LoginForm = z.input<typeof LoginFormSchema>;
+export type LoginForm = z.input<typeof LoginFormSchema>
+
+export const ArtistsResultSchema = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    dateofbirth: z.string(),
+    placeofbirth: z.string(),
+    history: z.string(),
+    createdat: z.string(),
+    updatedat: z.string(),
+  })
+)
+
+export type ArtistsSchema = z.infer<typeof ArtistsResultSchema>
+
+export const CustomersResultSchema = z.array(
+  z.object({
+    name: z.string(),
+    address: z.string(),
+    email: z.string(),
+    createdat: z.string(),
+  })
+)
+
+export type CustomersSchema = z.infer<typeof CustomersResultSchema>

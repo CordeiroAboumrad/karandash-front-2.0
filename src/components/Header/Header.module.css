@@ -28,6 +28,11 @@
   background-color: #f0f0f0;
 }
 
+.navLink.active {
+  background-color: #ffcccc;
+  border-color: #cc0000;
+}
+
 .headerImage {
   background-color: white;
   width: 100%;

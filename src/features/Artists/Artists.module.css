@@ -1,9 +1,43 @@
 .artists {
-  flex-direction: column;
-  height: max-content;
+  padding: 2rem;
   width: 100%;
-  display: flex;
-  font-size: 1em;
-  align-items: center;
-  justify-content: center;
+}
+
+.artists h2 {
+  margin-bottom: 1.5rem;
+}
+
+.artistsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.artistCard {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 1.5rem;
+  background-color: white;
+  transition: box-shadow 0.2s;
+}
+
+.artistCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.artistCard h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid black;
+  padding-bottom: 0.5rem;
+}
+
+.artistInfo p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.artistInfo strong {
+  display: inline-block;
+  min-width: 120px;
 }
