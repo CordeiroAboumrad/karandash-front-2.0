@@ -31,3 +31,26 @@ export const CustomersResultSchema = z.array(
 )
 
 export type CustomersSchema = z.infer<typeof CustomersResultSchema>
+
+export const ProductsResultSchema = z.array(
+  z.object({
+    description: z.number(),
+    title: z.string(),
+    company: z.string(),
+    status: z.string(),
+    type: z.string(),
+    keywords: z.string(),
+    artistid: z.number().nullable(),
+    arttechnique: z.string(),
+    acquisitioncost: z.number(),
+    value: z.number(),
+    productyear: z.string(),
+    measurements: z.string(),
+    sold: z.boolean(),
+    customersoldtoid: z.number().nullable(),
+    createdat: z.string(),
+    updatedat: z.string(),
+  })
+)
+
+export type ProductsSchema = z.infer<typeof ProductsResultSchema>

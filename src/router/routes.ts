@@ -3,6 +3,7 @@ export const RegularRoutes = {
   LOGIN: "/login",
   CUSTOMERS: "/customers",
   ARTISTS: "/artists",
+  PRODUCTS: "/products",
 };
 
 export const ErrorRoutes = {

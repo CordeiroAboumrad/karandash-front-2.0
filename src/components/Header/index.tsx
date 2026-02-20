@@ -31,6 +31,14 @@ export const Header = () => {
         >
           Customers
         </Link>
+        <Link
+          to={RegularRoutes.PRODUCTS}
+          className={`${styles.navLink} ${
+            location.pathname === RegularRoutes.PRODUCTS ? styles.active : ''
+          }`}
+        >
+          Products
+        </Link>
         <button onClick={handleLogout} className={styles.navLink}>
           Logout
         </button>

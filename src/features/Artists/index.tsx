@@ -1,4 +1,5 @@
 import { useGetArtistsQuery } from '../../data/queries/karandashQueries'
+import { Oval } from 'react-loader-spinner'
 import styles from './Artists.module.css'
 
 export const Artists = () => {
@@ -8,7 +9,9 @@ export const Artists = () => {
     <div className={styles.artists}>
       <h2>Artists</h2>
 
-      {artistsQuery.isFetching && <p>Loading...</p>}
+      {artistsQuery.isFetching && (
+        <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
+      )}
       {artistsQuery.isFetched && artistsQuery.data?.length === 0 && (
         <p>No artists found.</p>
       )}

@@ -60,6 +60,11 @@
   background-color: #f0f0f0;
 }
 
+.loginButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .logoContainer {
   display: flex;
   justify-content: center;

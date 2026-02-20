@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { Oval } from 'react-loader-spinner'
 import karandashLogo from '../../assets/karandash.png'
 import { login } from '../../data/apis/requests'
 import { LoginForm } from '../../data/schemas/schemas'
@@ -8,6 +10,7 @@ import styles from './Login.module.css'
 
 export const Login = () => {
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
 
   const methods = useForm<LoginForm>({
     defaultValues: {
@@ -20,12 +23,16 @@ export const Login = () => {
     const email = data.email
     const password = data.password
     if (!email || !password) return
+    setIsLoading(true)
     try {
       const res = await login(email, password)
       localStorage.setItem('bearerToken', res.sessionId)
+      sessionStorage.setItem('isAuthenticated', 'true')
       navigate(RegularRoutes.HOME)
     } catch (error) {
       // Error handled by apiErrorHandler
+    } finally {
+      setIsLoading(false)
     }
   })
 
@@ -62,8 +69,12 @@ export const Login = () => {
                 required
               />
             </div>
-            <button type="submit" className={styles.loginButton}>
-              Login
+            <button type="submit" className={styles.loginButton} disabled={isLoading}>
+              {isLoading ? (
+                <Oval height={20} width={20} color="#cc0000" secondaryColor="#cc0000" />
+              ) : (
+                'Login'
+              )}
             </button>
           </form>
         </FormProvider>

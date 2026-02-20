@@ -1,4 +1,5 @@
 import { useGetCustomersQuery } from '../../data/queries/karandashQueries'
+import { Oval } from 'react-loader-spinner'
 import styles from './Customers.module.css'
 
 export const Customers = () => {
@@ -8,7 +9,9 @@ export const Customers = () => {
     <div className={styles.customers}>
       <h2>Customers</h2>
 
-      {customersQuery.isFetching && <p>Loading...</p>}
+      {customersQuery.isFetching && (
+        <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
+      )}
       {customersQuery.isFetched && customersQuery.data?.length === 0 && (
         <p>No customers found.</p>
       )}
