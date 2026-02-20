@@ -1,16 +1,40 @@
+import { useState } from 'react'
 import { useGetAllProductsQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
+import { AddProductModal } from './AddProductModal'
 import styles from './Products.module.css'
 
 export const Products = () => {
   const productsQuery = useGetAllProductsQuery()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleSuccess = () => {
+    productsQuery.refetch()
+  }
 
   return (
     <div className={styles.products}>
-      <h2>Products</h2>
+      <div className={styles.header}>
+        <h2>Products</h2>
+      </div>
 
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.addButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add Product
+        </button>
+      </div>
       {productsQuery.isFetching && (
-        <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
+        <div className={styles.loader}>
+          <Oval
+            height={50}
+            width={50}
+            color="#cc0000"
+            secondaryColor="#cc0000"
+          />
+        </div>
       )}
       {productsQuery.isFetched && productsQuery.data?.length === 0 && (
         <p>No products found.</p>
@@ -52,6 +76,12 @@ export const Products = () => {
             ))}
           </div>
         )}
+
+      <AddProductModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }
