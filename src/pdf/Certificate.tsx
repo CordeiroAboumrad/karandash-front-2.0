@@ -1,4 +1,7 @@
 import { Document, Page, Text, View, Image } from '@react-pdf/renderer'
+
+import karandashLogo from '../assets/karandash.png'
+
 import { styles } from './styles'
 
 type CertificateProps = {
@@ -23,7 +26,7 @@ export function Certificate({
       <Page size="A4" style={styles.page}>
         {/* HEADER */}
         <View style={styles.header}>
-          <Image src="/assets/logo.png" style={styles.logo} />
+          <Image src={karandashLogo} style={styles.logo} />
           <Text style={styles.company}>Karandash Arte Contemporânea LTDA</Text>
           <Text style={styles.subtext}>CNPJ: 09.342.353/0001-44</Text>
         </View>
