@@ -1,19 +1,44 @@
+import { useState } from 'react'
 import { useGetArtistsQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
+import { AddArtistModal } from './AddArtistModal'
 import styles from './Artists.module.css'
 
 export const Artists = () => {
   const artistsQuery = useGetArtistsQuery()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleSuccess = () => {
+    artistsQuery.refetch()
+  }
 
   return (
     <div className={styles.artists}>
-      <h2>Artists</h2>
+      <div className={styles.header}>
+        <h2>Artistas</h2>
+      </div>
+
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.addButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Artista
+        </button>
+      </div>
 
       {artistsQuery.isFetching && (
-        <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
+        <div className={styles.loader}>
+          <Oval
+            height={50}
+            width={50}
+            color="#cc0000"
+            secondaryColor="#cc0000"
+          />
+        </div>
       )}
       {artistsQuery.isFetched && artistsQuery.data?.length === 0 && (
-        <p>No artists found.</p>
+        <p>nenhum artista encontrado.</p>
       )}
       {artistsQuery.isFetched &&
         artistsQuery.data &&
@@ -24,19 +49,25 @@ export const Artists = () => {
                 <h3>{artist.name}</h3>
                 <div className={styles.artistInfo}>
                   <p>
-                    <strong>Date of Birth:</strong> {artist.dateofbirth}
+                    <strong>Data de Nascimento:</strong> {artist.dateofbirth}
                   </p>
                   <p>
-                    <strong>Place of Birth:</strong> {artist.placeofbirth}
+                    <strong>Local de Nascimento:</strong> {artist.placeofbirth}
                   </p>
                   <p>
-                    <strong>History:</strong> {artist.history}
+                    <strong>História:</strong> {artist.history}
                   </p>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+      <AddArtistModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }

@@ -21,7 +21,7 @@ export const Header = () => {
             location.pathname === RegularRoutes.ARTISTS ? styles.active : ''
           }`}
         >
-          Artists
+          Artistas
         </Link>
         <Link
           to={RegularRoutes.CUSTOMERS}
@@ -29,7 +29,7 @@ export const Header = () => {
             location.pathname === RegularRoutes.CUSTOMERS ? styles.active : ''
           }`}
         >
-          Customers
+          Clientes
         </Link>
         <Link
           to={RegularRoutes.PRODUCTS}
@@ -37,7 +37,7 @@ export const Header = () => {
             location.pathname === RegularRoutes.PRODUCTS ? styles.active : ''
           }`}
         >
-          Products
+          Produtos
         </Link>
         <button onClick={handleLogout} className={styles.navLink}>
           Logout
