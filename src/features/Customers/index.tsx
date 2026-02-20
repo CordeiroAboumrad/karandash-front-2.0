@@ -1,16 +1,40 @@
+import { useState } from 'react'
 import { useGetCustomersQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
+import { AddCustomerModal } from './AddCustomerModal'
 import styles from './Customers.module.css'
 
 export const Customers = () => {
   const customersQuery = useGetCustomersQuery()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleSuccess = () => {
+    customersQuery.refetch()
+  }
 
   return (
     <div className={styles.customers}>
-      <h2>Customers</h2>
+      <div className={styles.header}>
+        <h2>Customers</h2>
+      </div>
 
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.addButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add Customer
+        </button>
+      </div>
       {customersQuery.isFetching && (
-        <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
+        <div className={styles.loader}>
+          <Oval
+            height={50}
+            width={50}
+            color="#cc0000"
+            secondaryColor="#cc0000"
+          />
+        </div>
       )}
       {customersQuery.isFetched && customersQuery.data?.length === 0 && (
         <p>No customers found.</p>
@@ -34,6 +58,12 @@ export const Customers = () => {
             ))}
           </div>
         )}
+
+      <AddCustomerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }
