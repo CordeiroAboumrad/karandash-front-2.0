@@ -10,6 +10,7 @@ import { Login } from "../features/Login";
 import { Artists } from "../features/Artists";
 import { Customers } from "../features/Customers";
 import { Products } from "../features/Products";
+import { Reports } from "../features/Reports";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { RegularRoutes } from "./routes";
 
@@ -29,6 +30,7 @@ export const AppRouter = createBrowserRouter(
         <Route path={RegularRoutes.ARTISTS} element={<Artists />} />
         <Route path={RegularRoutes.CUSTOMERS} element={<Customers />} />
         <Route path={RegularRoutes.PRODUCTS} element={<Products />} />
+        <Route path={RegularRoutes.REPORTS} element={<Reports />} />
       </Route>
     </>,
   ),

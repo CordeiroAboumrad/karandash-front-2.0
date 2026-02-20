@@ -1,0 +1,86 @@
+.reports {
+  padding: 2rem;
+  width: 100%;
+}
+
+.reports h2 {
+  margin-bottom: 1.5rem;
+}
+
+.searchSection {
+  margin-bottom: 2rem;
+}
+
+.searchControls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.select {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.resultCard {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 1.5rem;
+  background-color: white;
+  transition: box-shadow 0.2s;
+}
+
+.resultCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resultCard h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid black;
+  padding-bottom: 0.5rem;
+}
+
+.resultCard p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.pdfButton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.pdfButton:hover {
+  background-color: #333;
+}

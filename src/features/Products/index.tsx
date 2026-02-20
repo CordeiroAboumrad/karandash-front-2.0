@@ -15,7 +15,7 @@ export const Products = () => {
   return (
     <div className={styles.products}>
       <div className={styles.header}>
-        <h2>Products</h2>
+        <h2>Produtos</h2>
       </div>
 
       <div className={styles.buttonContainer}>
@@ -23,7 +23,7 @@ export const Products = () => {
           className={styles.addButton}
           onClick={() => setIsModalOpen(true)}
         >
-          Add Product
+          + Produto
         </button>
       </div>
       {productsQuery.isFetching && (

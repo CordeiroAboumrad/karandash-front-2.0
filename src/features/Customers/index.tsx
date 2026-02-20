@@ -15,7 +15,7 @@ export const Customers = () => {
   return (
     <div className={styles.customers}>
       <div className={styles.header}>
-        <h2>Customers</h2>
+        <h2>Clientes</h2>
       </div>
 
       <div className={styles.buttonContainer}>
@@ -23,7 +23,7 @@ export const Customers = () => {
           className={styles.addButton}
           onClick={() => setIsModalOpen(true)}
         >
-          Add Customer
+          + Cliente
         </button>
       </div>
       {customersQuery.isFetching && (
@@ -37,7 +37,7 @@ export const Customers = () => {
         </div>
       )}
       {customersQuery.isFetched && customersQuery.data?.length === 0 && (
-        <p>No customers found.</p>
+        <p>Nenhum cliente encontrado.</p>
       )}
       {customersQuery.isFetched &&
         customersQuery.data &&
@@ -51,7 +51,7 @@ export const Customers = () => {
                     <strong>Email:</strong> {customer.email}
                   </p>
                   <p>
-                    <strong>Address:</strong> {customer.address}
+                    <strong>Endereço:</strong> {customer.address}
                   </p>
                 </div>
               </div>

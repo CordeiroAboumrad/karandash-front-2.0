@@ -122,7 +122,7 @@ export const AddProductModal = ({
                   secondaryColor="#fff"
                 />
               ) : (
-                'Add Product'
+                '+ Produto'
               )}
             </button>
           </div>
