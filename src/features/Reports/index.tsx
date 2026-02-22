@@ -31,7 +31,7 @@ export const Reports = () => {
 
   const filteredArtists =
     artistsQuery.data?.filter((artist) =>
-      artist.name.toLowerCase().includes(searchTerm.toLowerCase())
+      artist?.name.toLowerCase().includes(searchTerm.toLowerCase())
     ) || []
 
   const filteredCustomers =
@@ -98,7 +98,7 @@ export const Reports = () => {
                     dimensions={product.measurements || 'N/A'}
                     year={parseInt(product.productyear) || 0}
                     technique={product.arttechnique}
-                    artist="Unknown"
+                    artist={product.artists?.name || 'Unknown Artist'}
                   />
                 }
                 fileName={`certificate-${product.title}.pdf`}
@@ -117,12 +117,12 @@ export const Reports = () => {
         <div className={styles.resultsGrid}>
           {filteredArtists.map((artist, index) => (
             <div key={index} className={styles.resultCard}>
-              <h3>{artist.name}</h3>
+              <h3>{artist?.name}</h3>
               <p>
-                <strong>Date of Birth:</strong> {artist.dateofbirth}
+                <strong>Date of Birth:</strong> {artist?.dateofbirth}
               </p>
               <p>
-                <strong>Place of Birth:</strong> {artist.placeofbirth}
+                <strong>Place of Birth:</strong> {artist?.placeofbirth}
               </p>
             </div>
           ))}

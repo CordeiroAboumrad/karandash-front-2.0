@@ -75,3 +75,18 @@
   display: inline-block;
   min-width: 100px;
 }
+
+.pdfButton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.pdfButton:hover {
+  background-color: #333;
+}

@@ -7,17 +7,27 @@ export const LoginFormSchema = z.object({
 
 export type LoginForm = z.input<typeof LoginFormSchema>
 
-export const ArtistsResultSchema = z.array(
-  z.object({
-    id: z.number(),
-    name: z.string(),
-    dateofbirth: z.string(),
-    placeofbirth: z.string(),
-    history: z.string(),
-    createdat: z.string(),
-    updatedat: z.string(),
-  })
-)
+export const ArtistFormSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  dateofbirth: z.string(),
+  placeofbirth: z.string(),
+  history: z.string(),
+  createdat: z.string(),
+  updatedat: z.string(),
+})
+
+export const ArtistSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  dateofbirth: z.string(),
+  placeofbirth: z.string(),
+  history: z.string(),
+  createdat: z.string(),
+  updatedat: z.string(),
+})
+
+export const ArtistsResultSchema = z.array(ArtistSchema.optional())
 
 export type ArtistsSchema = z.infer<typeof ArtistsResultSchema>
 
@@ -41,6 +51,7 @@ export const ProductsResultSchema = z.array(
     type: z.string(),
     keywords: z.string(),
     artistid: z.number().nullable(),
+    artists: ArtistSchema.optional(),
     arttechnique: z.string(),
     acquisitioncost: z.number(),
     value: z.number(),
