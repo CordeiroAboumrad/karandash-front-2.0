@@ -9,7 +9,7 @@ import { AddProductModal } from './AddProductModal'
 import styles from './Products.module.css'
 
 export const Products = () => {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [size, setSize] = useState(10)
   const productsQuery = useGetAllProductsQuery(page, size)
   const [isModalOpen, setIsModalOpen] = useState(false)

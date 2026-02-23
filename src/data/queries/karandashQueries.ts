@@ -22,7 +22,7 @@ export const useGetCustomersQuery = () => {
   })
 }
 
-export const useGetAllProductsQuery = (page: number = 1, size: number = 10) => {
+export const useGetAllProductsQuery = (page: number = 0, size: number = 10) => {
   return useQuery({
     queryKey: ['products', page, size],
     queryFn: () => getAllProducts(page, size),
