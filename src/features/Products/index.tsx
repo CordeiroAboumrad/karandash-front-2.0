@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import { useGetAllProductsQuery } from '../../data/queries/karandashQueries'
+import { useState } from 'react'
 import { Oval } from 'react-loader-spinner'
-import { AddProductModal } from './AddProductModal'
+import { useNavigate } from 'react-router-dom'
+import { useGetAllProductsQuery } from '../../data/queries/karandashQueries'
+import { ProductSchema } from '../../data/schemas/schemas'
 import { Certificate } from '../../pdf/Certificate'
+import { AddProductModal } from './AddProductModal'
 import styles from './Products.module.css'
-import { Product } from '../../data/apis/types'
-import { ProductSchema, ProductsSchema } from '../../data/schemas/schemas'
 
 export const Products = () => {
   const [page, setPage] = useState(1)

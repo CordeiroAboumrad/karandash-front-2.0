@@ -1,6 +1,8 @@
 .products {
-  padding: 2rem;
-  width: 100%;
+  padding: 1rem;
+  width: 95%;
+  max-width: 99%;
+  overflow-x: hidden;
 }
 
 .header {
@@ -43,8 +45,10 @@
 
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .productCard {
@@ -53,6 +57,8 @@
   padding: 1.5rem;
   background-color: white;
   transition: box-shadow 0.2s;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .productCard:hover {

@@ -1,6 +1,8 @@
 .productDetails {
-  padding: 2rem;
-  width: 100%;
+  padding: 1rem;
+  width: 95%;
+  max-width: 99%;
+  overflow-x: hidden;
 }
 
 .loader {

@@ -1,11 +1,8 @@
-import { useParams, useNavigate } from 'react-router-dom'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import {
-  useGetAllProductsQuery,
-  useGetProductByIdQuery,
-} from '../../data/queries/karandashQueries'
-import { Certificate } from '../../pdf/Certificate'
 import { Oval } from 'react-loader-spinner'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useGetProductByIdQuery } from '../../data/queries/karandashQueries'
+import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
 
 export const ProductDetails = () => {
