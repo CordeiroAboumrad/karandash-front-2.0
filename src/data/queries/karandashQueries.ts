@@ -3,6 +3,7 @@ import {
   getAllCustomers,
   getAllArtists,
   getAllProducts,
+  getProductById,
 } from '../apis/requests'
 
 export const useGetArtistsQuery = () => {
@@ -21,10 +22,18 @@ export const useGetCustomersQuery = () => {
   })
 }
 
-export const useGetAllProductsQuery = () => {
+export const useGetAllProductsQuery = (page: number = 1, size: number = 10) => {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: () => getAllProducts(),
+    queryKey: ['products', page, size],
+    queryFn: () => getAllProducts(page, size),
+    refetchOnWindowFocus: false,
+  })
+}
+
+export const useGetProductByIdQuery = (id: string) => {
+  return useQuery({
+    queryKey: ['product', id],
+    queryFn: () => getProductById(id),
     refetchOnWindowFocus: false,
   })
 }

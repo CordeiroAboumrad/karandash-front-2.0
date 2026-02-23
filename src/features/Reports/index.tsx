@@ -8,6 +8,7 @@ import {
 import { Certificate } from '../../pdf/Certificate'
 import { Oval } from 'react-loader-spinner'
 import styles from './Reports.module.css'
+import { ProductSchema } from '../../data/schemas/schemas'
 
 export const Reports = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -25,8 +26,8 @@ export const Reports = () => {
     productsQuery.isFetching
 
   const filteredProducts =
-    productsQuery.data?.filter((product) =>
-      product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    productsQuery.data?.content?.filter((product) =>
+      product?.title.toLowerCase().includes(searchTerm.toLowerCase())
     ) || []
 
   const filteredArtists =
@@ -78,14 +79,14 @@ export const Reports = () => {
 
       {!isLoading && searchType === 'produtos' && (
         <div className={styles.resultsGrid}>
-          {filteredProducts.map((product, index) => (
+          {filteredProducts.map((product: ProductSchema, index: number) => (
             <div key={index} className={styles.resultCard}>
               <h3>{product.title}</h3>
               <p>
                 <strong>Company:</strong> {product.company}
               </p>
               <p>
-                <strong>Year:</strong> {product.productyear}
+                <strong>Year:</strong> {product.productYear}
               </p>
               <p>
                 <strong>Value:</strong> ${product.value}
@@ -96,8 +97,8 @@ export const Reports = () => {
                     artworkImage=""
                     title={product.title}
                     dimensions={product.measurements || 'N/A'}
-                    year={parseInt(product.productyear) || 0}
-                    technique={product.arttechnique}
+                    year={parseInt(product.productYear) || 0}
+                    technique={product.artTechnique}
                     artist={product.artists?.name || 'Unknown Artist'}
                   />
                 }

@@ -6,9 +6,13 @@ import { Oval } from 'react-loader-spinner'
 import { AddProductModal } from './AddProductModal'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './Products.module.css'
+import { Product } from '../../data/apis/types'
+import { ProductSchema, ProductsSchema } from '../../data/schemas/schemas'
 
 export const Products = () => {
-  const productsQuery = useGetAllProductsQuery()
+  const [page, setPage] = useState(1)
+  const [size, setSize] = useState(10)
+  const productsQuery = useGetAllProductsQuery(page, size)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -40,71 +44,115 @@ export const Products = () => {
           />
         </div>
       )}
-      {productsQuery.isFetched && productsQuery.data?.length === 0 && (
+      {productsQuery.isFetched && productsQuery.data?.content?.length === 0 && (
         <p>No products found.</p>
       )}
       {productsQuery.isFetched &&
-        productsQuery.data &&
-        productsQuery.data.length > 0 && (
-          <div className={styles.productsGrid}>
-            {productsQuery.data.map((product, index) => (
-              <div key={index} className={styles.productCard}>
-                <h3>{product.title}</h3>
-                <div className={styles.productInfo}>
-                  <p>
-                    <strong>Description:</strong> {product.description}
-                  </p>
-                  <p>
-                    <strong>Company:</strong> {product.company}
-                  </p>
-                  <p>
-                    <strong>Type:</strong> {product.type}
-                  </p>
-                  <p>
-                    <strong>Status:</strong> {product.status}
-                  </p>
-                  <p>
-                    <strong>Technique:</strong> {product.arttechnique}
-                  </p>
-                  <p>
-                    <strong>Year:</strong> {product.productyear}
-                  </p>
-                  <p>
-                    <strong>Value:</strong> ${product.value}
-                  </p>
-                  <p>
-                    <strong>Sold:</strong> {product.sold ? 'Yes' : 'No'}
-                  </p>
-                  <div className={styles.buttonGroup}>
-                    <button
-                      onClick={() => navigate(`/products/${index}`)}
-                      className={styles.detailsButton}
-                    >
-                      View Details
-                    </button>
-                    <PDFDownloadLink
-                      document={
-                        <Certificate
-                          artworkImage=""
-                          title={product.title}
-                          dimensions={product.measurements || 'N/A'}
-                          year={parseInt(product.productyear) || 0}
-                          technique={product.arttechnique}
-                          artist={product.artists?.name || 'Unknown Artist'}
-                        />
-                      }
-                      fileName={`certificate-${product.title}.pdf`}
-                      className={styles.pdfButton}
-                    >
-                      {({ loading }) =>
-                        loading ? 'Generating...' : 'Download Certificate'
-                      }
-                    </PDFDownloadLink>
+        productsQuery.data?.content &&
+        productsQuery.data.content.length > 0 && (
+          <>
+            <div className={styles.productsGrid}>
+              {productsQuery.data.content.map(
+                (product: ProductSchema, index: number) => (
+                  <div key={index} className={styles.productCard}>
+                    <h3>{product.title}</h3>
+                    <div className={styles.productInfo}>
+                      <p>
+                        <strong>Description:</strong> {product.description}
+                      </p>
+                      <p>
+                        <strong>Company:</strong> {product.company}
+                      </p>
+                      <p>
+                        <strong>Type:</strong> {product.type}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {product.status}
+                      </p>
+                      <p>
+                        <strong>Technique:</strong> {product.artTechnique}
+                      </p>
+                      <p>
+                        <strong>Year:</strong> {product.productYear}
+                      </p>
+                      <p>
+                        <strong>Value:</strong> ${product.value}
+                      </p>
+                      <p>
+                        <strong>Sold:</strong>{' '}
+                        {product.status == 'sold' ? 'Yes' : 'No'}
+                      </p>
+                      <div className={styles.buttonGroup}>
+                        <button
+                          onClick={() => navigate(`/product/${product.id}`)}
+                          className={styles.detailsButton}
+                        >
+                          View Details
+                        </button>
+                        <PDFDownloadLink
+                          document={
+                            <Certificate
+                              artworkImage=""
+                              title={product.title}
+                              dimensions={product.measurements || 'N/A'}
+                              year={parseInt(product.productYear) || 0}
+                              technique={product.artTechnique}
+                              artist={
+                                product?.artists?.name || 'Unknown Artist'
+                              }
+                            />
+                          }
+                          fileName={`certificate-${product.title}.pdf`}
+                          className={styles.pdfButton}
+                        >
+                          {({ loading }) =>
+                            loading ? 'Generating...' : 'Download Certificate'
+                          }
+                        </PDFDownloadLink>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )
+              )}
+            </div>
+
+            <div className={styles.pagination}>
+              <div className={styles.paginationControls}>
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className={styles.pageButton}
+                >
+                  Previous
+                </button>
+                <span className={styles.pageInfo}>
+                  Page {page + 1} of {productsQuery.data.totalPages}
+                </span>
+                <button
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={page >= productsQuery.data.totalPages - 1}
+                  className={styles.pageButton}
+                >
+                  Next
+                </button>
               </div>
-            ))}
-          </div>
+              <div className={styles.sizeSelector}>
+                <label>Items per page:</label>
+                <select
+                  value={size}
+                  onChange={(e) => {
+                    setSize(Number(e.target.value))
+                    setPage(0)
+                  }}
+                  className={styles.sizeSelect}
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+            </div>
+          </>
         )}
 
       <AddProductModal

@@ -31,10 +31,7 @@ export const AppRouter = createBrowserRouter(
         <Route path={RegularRoutes.ARTISTS} element={<Artists />} />
         <Route path={RegularRoutes.CUSTOMERS} element={<Customers />} />
         <Route path={RegularRoutes.PRODUCTS} element={<Products />} />
-        <Route
-          path={`${RegularRoutes.PRODUCTS}}/:id`}
-          element={<ProductDetails />}
-        />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path={RegularRoutes.REPORTS} element={<Reports />} />
       </Route>
     </>

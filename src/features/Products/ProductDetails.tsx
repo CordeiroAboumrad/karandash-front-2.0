@@ -1,18 +1,23 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import { useGetAllProductsQuery } from '../../data/queries/karandashQueries'
+import {
+  useGetAllProductsQuery,
+  useGetProductByIdQuery,
+} from '../../data/queries/karandashQueries'
 import { Certificate } from '../../pdf/Certificate'
 import { Oval } from 'react-loader-spinner'
 import styles from './ProductDetails.module.css'
 
 export const ProductDetails = () => {
   const { id } = useParams()
+  console.log(id)
+
   const navigate = useNavigate()
-  const productsQuery = useGetAllProductsQuery()
+  const productQuery = useGetProductByIdQuery(id || '')
 
-  const product = productsQuery.data?.find((p, index) => index === parseInt(id || '0'))
+  const product = productQuery.data
 
-  if (productsQuery.isFetching) {
+  if (productQuery.isFetching) {
     return (
       <div className={styles.loader}>
         <Oval height={50} width={50} color="#cc0000" secondaryColor="#cc0000" />
@@ -126,7 +131,9 @@ export const ProductDetails = () => {
           fileName={`certificate-${product.title}.pdf`}
           className={styles.pdfButton}
         >
-          {({ loading }) => (loading ? 'Generating...' : 'Download Certificate')}
+          {({ loading }) =>
+            loading ? 'Generating...' : 'Download Certificate'
+          }
         </PDFDownloadLink>
       </div>
     </div>

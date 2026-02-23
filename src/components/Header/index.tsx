@@ -13,7 +13,9 @@ export const Header = () => {
 
   return (
     <header className={styles.kHeader}>
-      <text>Sistema de Gerenciamento Karandash</text>
+      <div className={styles.headerTitle}>
+        Sistema de Gerenciamento Karandash
+      </div>
       <nav className={styles.nav}>
         <Link
           to={RegularRoutes.ARTISTS}

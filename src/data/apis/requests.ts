@@ -49,17 +49,18 @@ export const createProduct = async (productData: Product) => {
   return res.data
 }
 
-export const getProductByIdBody = async (id: string) => {
-  const res = await karandashClient.get('/product/retrieve-product', {
-    data: {
-      productId: id,
-    },
-  })
+export const getProductById = async (id: string) => {
+  const res = await karandashClient.get(`/product/retrieve-product/${id}`)
   return res.data
 }
 
-export const getAllProducts = async (): Promise<ProductsSchema> => {
-  const res = await karandashClient.get('/product/all-products')
+export const getAllProducts = async (
+  page: number = 1,
+  size: number = 10
+): Promise<ProductsSchema> => {
+  const res = await karandashClient.get('/product/all-products', {
+    params: { page, size },
+  })
   return res.data
 }
 
@@ -72,11 +73,6 @@ export const saveProductImage = async (imageData: FormData) => {
 
 export const getProductImage = async (productId: number) => {
   const res = await karandashClient.get(`/product/retrieve-image/${productId}`)
-  return res.data
-}
-
-export const getProductById = async (id: number) => {
-  const res = await karandashClient.get(`/productretrieve-first/${id}`)
   return res.data
 }
 

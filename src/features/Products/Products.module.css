@@ -113,3 +113,59 @@
 .pdfButton:hover {
   background-color: #333;
 }
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid black;
+}
+
+.paginationControls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pageButton {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-weight: 500;
+}
+
+.sizeSelector {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sizeSelector label {
+  font-weight: 500;
+}
+
+.sizeSelect {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
