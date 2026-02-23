@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { useGetAllProductsQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
@@ -9,6 +10,7 @@ import styles from './Products.module.css'
 export const Products = () => {
   const productsQuery = useGetAllProductsQuery()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleSuccess = () => {
     productsQuery.refetch()
@@ -73,24 +75,32 @@ export const Products = () => {
                   <p>
                     <strong>Sold:</strong> {product.sold ? 'Yes' : 'No'}
                   </p>
-                  <PDFDownloadLink
-                    document={
-                      <Certificate
-                        artworkImage=""
-                        title={product.title}
-                        dimensions={product.measurements || 'N/A'}
-                        year={parseInt(product.productyear) || 0}
-                        technique={product.arttechnique}
-                        artist={product.artists?.name || 'Unknown Artist'}
-                      />
-                    }
-                    fileName={`certificate-${product.title}.pdf`}
-                    className={styles.pdfButton}
-                  >
-                    {({ loading }) =>
-                      loading ? 'Generating...' : 'Download Certificate'
-                    }
-                  </PDFDownloadLink>
+                  <div className={styles.buttonGroup}>
+                    <button
+                      onClick={() => navigate(`/products/${index}`)}
+                      className={styles.detailsButton}
+                    >
+                      View Details
+                    </button>
+                    <PDFDownloadLink
+                      document={
+                        <Certificate
+                          artworkImage=""
+                          title={product.title}
+                          dimensions={product.measurements || 'N/A'}
+                          year={parseInt(product.productyear) || 0}
+                          technique={product.arttechnique}
+                          artist={product.artists?.name || 'Unknown Artist'}
+                        />
+                      }
+                      fileName={`certificate-${product.title}.pdf`}
+                      className={styles.pdfButton}
+                    >
+                      {({ loading }) =>
+                        loading ? 'Generating...' : 'Download Certificate'
+                      }
+                    </PDFDownloadLink>
+                  </div>
                 </div>
               </div>
             ))}

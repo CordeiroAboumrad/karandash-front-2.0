@@ -2,17 +2,18 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-} from "react-router-dom";
+} from 'react-router-dom'
 
-import { Root } from "../layout/Root";
-import { Home } from "../features/Home";
-import { Login } from "../features/Login";
-import { Artists } from "../features/Artists";
-import { Customers } from "../features/Customers";
-import { Products } from "../features/Products";
-import { Reports } from "../features/Reports";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { RegularRoutes } from "./routes";
+import { Root } from '../layout/Root'
+import { Home } from '../features/Home'
+import { Login } from '../features/Login'
+import { Artists } from '../features/Artists'
+import { Customers } from '../features/Customers'
+import { Products } from '../features/Products'
+import { ProductDetails } from '../features/Products/ProductDetails'
+import { Reports } from '../features/Reports'
+import { ProtectedRoute } from './ProtectedRoute'
+import { RegularRoutes } from './routes'
 
 export const AppRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -30,8 +31,12 @@ export const AppRouter = createBrowserRouter(
         <Route path={RegularRoutes.ARTISTS} element={<Artists />} />
         <Route path={RegularRoutes.CUSTOMERS} element={<Customers />} />
         <Route path={RegularRoutes.PRODUCTS} element={<Products />} />
+        <Route
+          path={`${RegularRoutes.PRODUCTS}}/:id`}
+          element={<ProductDetails />}
+        />
         <Route path={RegularRoutes.REPORTS} element={<Reports />} />
       </Route>
-    </>,
-  ),
-);
+    </>
+  )
+)
