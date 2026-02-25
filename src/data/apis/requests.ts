@@ -67,15 +67,15 @@ export const getAllProducts = async (
 export const saveProductImage = async (productId: number, files: File[]) => {
   const formData = new FormData()
   formData.append('productId', productId.toString())
-  files.forEach(file => formData.append('files', file))
+  files.forEach((file) => formData.append('files', file))
   const res = await karandashClient.post('/product/save-images', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
   return res.data
 }
 
-export const getProductImage = async (productId: number) => {
-  const res = await karandashClient.get(`/product/retrieve-image/${productId}`)
+export const getProductImages = async (productId: number) => {
+  const res = await karandashClient.get(`/product/images/${productId}`)
   return res.data
 }
 

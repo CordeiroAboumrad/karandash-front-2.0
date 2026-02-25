@@ -3,7 +3,10 @@ import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetProductByIdQuery } from '../../data/queries/karandashQueries'
+import {
+  useGetProductByIdQuery,
+  useGetProductImagesQuery,
+} from '../../data/queries/karandashQueries'
 import { saveProductImage } from '../../data/apis/requests'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
@@ -18,8 +21,9 @@ export const ProductDetails = () => {
 
   const navigate = useNavigate()
   const productQuery = useGetProductByIdQuery(id || '')
-
   const product = productQuery.data
+
+  const imagesQuery = useGetProductImagesQuery(product?.id || 0)
 
   const handleUploadClick = () => {
     fileInputRef.current?.click()
@@ -52,7 +56,10 @@ export const ProductDetails = () => {
     setIsUploading(true)
     try {
       await saveProductImage(product.id, selectedFiles)
-      toast.success(`${selectedFiles.length} image(s) uploaded successfully`, { icon: '✓' })
+      await imagesQuery.refetch()
+      toast.success(`${selectedFiles.length} image(s) uploaded successfully`, {
+        icon: '✓',
+      })
     } catch (error) {
       toast.error('Failed to upload images')
     } finally {
@@ -93,7 +100,12 @@ export const ProductDetails = () => {
         </button>
         {isUploading ? (
           <div className={styles.uploadingLoader}>
-            <Oval height={30} width={30} color="#cc0000" secondaryColor="#cc0000" />
+            <Oval
+              height={30}
+              width={30}
+              color="#cc0000"
+              secondaryColor="#cc0000"
+            />
           </div>
         ) : (
           <button onClick={handleUploadClick} className={styles.uploadButton}>
@@ -114,17 +126,27 @@ export const ProductDetails = () => {
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <h3>Confirm Upload</h3>
-            <p>Are you sure you want to upload {selectedFiles.length} file(s)?</p>
+            <p>
+              Are you sure you want to upload {selectedFiles.length} file(s)?
+            </p>
             <div className={styles.fileList}>
               {selectedFiles.map((file, i) => (
-                <p key={i} className={styles.fileName}>{file.name}</p>
+                <p key={i} className={styles.fileName}>
+                  {file.name}
+                </p>
               ))}
             </div>
             <div className={styles.modalButtons}>
-              <button onClick={handleCancelUpload} className={styles.cancelButton}>
+              <button
+                onClick={handleCancelUpload}
+                className={styles.cancelButton}
+              >
                 Cancel
               </button>
-              <button onClick={handleConfirmUpload} className={styles.confirmButton}>
+              <button
+                onClick={handleConfirmUpload}
+                className={styles.confirmButton}
+              >
                 Confirm
               </button>
             </div>
@@ -225,6 +247,22 @@ export const ProductDetails = () => {
             loading ? 'Generating...' : 'Download Certificate'
           }
         </PDFDownloadLink>
+
+        {imagesQuery.data && imagesQuery.data.length > 0 && (
+          <div className={styles.imagesSection}>
+            <h2>Product Images</h2>
+            <div className={styles.imagesGrid}>
+              {imagesQuery.data.map((img: any) => (
+                <div key={img.id} className={styles.imageCard}>
+                  <img
+                    src={img.mediaurl}
+                    alt={`Product ${img.mediadisplayposition}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

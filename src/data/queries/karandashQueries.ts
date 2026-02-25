@@ -4,6 +4,7 @@ import {
   getAllArtists,
   getAllProducts,
   getProductById,
+  getProductImages,
 } from '../apis/requests'
 
 export const useGetArtistsQuery = () => {
@@ -34,6 +35,14 @@ export const useGetProductByIdQuery = (id: string) => {
   return useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductById(id),
+    refetchOnWindowFocus: false,
+  })
+}
+
+export const useGetProductImagesQuery = (productId: number) => {
+  return useQuery({
+    queryKey: ['productImages', productId],
+    queryFn: () => getProductImages(productId),
     refetchOnWindowFocus: false,
   })
 }
