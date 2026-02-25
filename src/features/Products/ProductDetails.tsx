@@ -33,6 +33,13 @@ export const ProductDetails = () => {
       e.target.value = ''
       return
     }
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0)
+    const maxSize = 50 * 1024 * 1024
+    if (totalSize > maxSize) {
+      toast.error('Total file size exceeds 50MB limit')
+      e.target.value = ''
+      return
+    }
     setSelectedFiles(files)
     setShowModal(true)
     e.target.value = ''
