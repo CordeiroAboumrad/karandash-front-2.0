@@ -1,18 +1,63 @@
 import { PDFDownloadLink } from '@react-pdf/renderer'
+import { useState, useRef } from 'react'
+import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetProductByIdQuery } from '../../data/queries/karandashQueries'
+import { saveProductImage } from '../../data/apis/requests'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
 
 export const ProductDetails = () => {
   const { id } = useParams()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   console.log(id)
 
   const navigate = useNavigate()
   const productQuery = useGetProductByIdQuery(id || '')
 
   const product = productQuery.data
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
+    if (files.length > 5) {
+      toast.error('Maximum 5 images allowed at a time')
+      e.target.value = ''
+      return
+    }
+    setSelectedFiles(files)
+    setShowModal(true)
+    e.target.value = ''
+  }
+
+  const handleConfirmUpload = async () => {
+    if (selectedFiles.length === 0 || !product) return
+
+    setShowModal(false)
+    setIsUploading(true)
+    try {
+      await saveProductImage(product.id, selectedFiles)
+      toast.success(`${selectedFiles.length} image(s) uploaded successfully`, { icon: '✓' })
+    } catch (error) {
+      toast.error('Failed to upload images')
+    } finally {
+      setIsUploading(false)
+      setSelectedFiles([])
+    }
+  }
+
+  const handleCancelUpload = () => {
+    setShowModal(false)
+    setSelectedFiles([])
+  }
 
   if (productQuery.isFetching) {
     return (
@@ -35,9 +80,50 @@ export const ProductDetails = () => {
 
   return (
     <div className={styles.productDetails}>
-      <button onClick={() => navigate(-1)} className={styles.backButton}>
-        ← Back
-      </button>
+      <div className={styles.buttonRow}>
+        <button onClick={() => navigate(-1)} className={styles.backButton}>
+          ← Back
+        </button>
+        {isUploading ? (
+          <div className={styles.uploadingLoader}>
+            <Oval height={30} width={30} color="#cc0000" secondaryColor="#cc0000" />
+          </div>
+        ) : (
+          <button onClick={handleUploadClick} className={styles.uploadButton}>
+            Upload Image
+          </button>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+        />
+      </div>
+
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h3>Confirm Upload</h3>
+            <p>Are you sure you want to upload {selectedFiles.length} file(s)?</p>
+            <div className={styles.fileList}>
+              {selectedFiles.map((file, i) => (
+                <p key={i} className={styles.fileName}>{file.name}</p>
+              ))}
+            </div>
+            <div className={styles.modalButtons}>
+              <button onClick={handleCancelUpload} className={styles.cancelButton}>
+                Cancel
+              </button>
+              <button onClick={handleConfirmUpload} className={styles.confirmButton}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className={styles.detailsCard}>
         <h1>{product.title}</h1>

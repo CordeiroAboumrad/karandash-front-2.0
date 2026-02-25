@@ -8,7 +8,10 @@ const NotificationsManager = () => {
   return (
     <Toaster>
       {(t) => {
-        const state = (typeof t.icon === 'string' ? t.icon : 'danger') as BrValidationState
+        let state: BrValidationState = 'danger'
+        if (t.type === 'success') state = 'success'
+        else if (t.type === 'error') state = 'danger'
+        
         return (
           <ToastBar toast={t} style={{ padding: 0, minWidth: "100%" }}>
             {() => (
