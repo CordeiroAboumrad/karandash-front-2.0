@@ -1,35 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Oval } from 'react-loader-spinner'
-import { createProduct } from '../../data/apis/requests'
+import { createProduct, updateProduct } from '../../data/apis/requests'
 import styles from './AddProductModal.module.css'
 import { Product } from '../../data/apis/types'
+import { ProductSchema } from '../../data/schemas/schemas'
 
 interface AddProductModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  editData?: ProductSchema | undefined
 }
 
 export const AddProductModal = ({
   isOpen,
   onClose,
   onSuccess,
+  editData,
 }: AddProductModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<Product>()
+
+  useEffect(() => {
+    if (editData) {
+      setValue('title', editData.title)
+      setValue('description', editData.description.toString())
+      setValue('company', editData.company)
+      setValue('type', editData.type)
+      setValue('status', editData.status)
+      setValue('artTechnique', editData.artTechnique)
+      setValue('productYear', editData.productYear)
+      setValue('value', editData.value)
+    } else {
+      reset()
+    }
+  }, [editData, setValue, reset])
 
   if (!isOpen) return null
 
   const onSubmit = async (data: Product) => {
     setIsLoading(true)
     try {
-      await createProduct(data)
+      if (editData) {
+        await updateProduct(editData.id, data)
+      } else {
+        await createProduct(data)
+      }
       reset()
       onSuccess()
       onClose()
@@ -43,7 +66,7 @@ export const AddProductModal = ({
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>Add New Product</h2>
+        <h2>{editData ? 'Edit Product' : 'Add New Product'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
             <label htmlFor="title">Title *</label>
@@ -121,6 +144,8 @@ export const AddProductModal = ({
                   color="#fff"
                   secondaryColor="#fff"
                 />
+              ) : editData ? (
+                'Atualizar Produto'
               ) : (
                 '+ Produto'
               )}

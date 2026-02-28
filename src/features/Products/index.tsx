@@ -18,6 +18,8 @@ export const Products = () => {
   const [products, setProducts] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editProduct, setEditProduct] = useState<ProductSchema | undefined>(undefined)
+  const [descriptionModal, setDescriptionModal] = useState<string | null>(null)
   const navigate = useNavigate()
 
   const fetchProducts = async () => {
@@ -64,6 +66,11 @@ export const Products = () => {
 
   const handleSuccess = () => {
     fetchProducts()
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setEditProduct(undefined)
   }
 
   return (
@@ -135,59 +142,80 @@ export const Products = () => {
           <div className={styles.productsGrid}>
             {products.content.map((product: ProductSchema, index: number) => (
               <div key={index} className={styles.productCard}>
-                <h3>{product.title}</h3>
-                <div className={styles.productInfo}>
-                  <p>
-                    <strong>Description:</strong> {product.description}
-                  </p>
-                  <p>
-                    <strong>Company:</strong> {product.company}
-                  </p>
-                  <p>
-                    <strong>Type:</strong> {product.type}
-                  </p>
-                  <p>
-                    <strong>Status:</strong> {product.status}
-                  </p>
-                  <p>
-                    <strong>Technique:</strong> {product.artTechnique}
-                  </p>
-                  <p>
-                    <strong>Year:</strong> {product.productYear}
-                  </p>
-                  <p>
-                    <strong>Value:</strong> ${product.value}
-                  </p>
-                  <p>
-                    <strong>Sold:</strong>{' '}
-                    {product.status == 'sold' ? 'Yes' : 'No'}
-                  </p>
-                  <div className={styles.buttonGroup}>
-                    <button
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      className={styles.detailsButton}
-                    >
-                      View Details
-                    </button>
-                    <PDFDownloadLink
-                      document={
-                        <Certificate
-                          artworkImage=""
-                          title={product.title}
-                          dimensions={product.measurements || 'N/A'}
-                          year={parseInt(product.productYear) || 0}
-                          technique={product.artTechnique}
-                          artist={product?.artists?.name || 'Unknown Artist'}
-                        />
-                      }
-                      fileName={`certificate-${product.title}.pdf`}
-                      className={styles.pdfButton}
-                    >
-                      {({ loading }) =>
-                        loading ? 'Generating...' : 'Download Certificate'
-                      }
-                    </PDFDownloadLink>
+                <div className={styles.cardContent}>
+                  <h3>{product.title}</h3>
+                  <div className={styles.productInfo}>
+                    <div className={styles.descriptionContainer}>
+                      <div className={styles.descriptionHeader}>
+                        <button
+                          onClick={() => setDescriptionModal(product.description.toString() || '')}
+                          className={styles.magnifierButton}
+                          title="Ver descrição completa"
+                        >
+                          <i className="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <strong>Description:</strong>
+                      </div>
+                    </div>
+                    <p className={styles.descriptionText}>{product.description}</p>
+                    <p>
+                      <strong>Company:</strong> {product.company}
+                    </p>
+                    <p>
+                      <strong>Type:</strong> {product.type}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {product.status}
+                    </p>
+                    <p>
+                      <strong>Technique:</strong> {product.artTechnique}
+                    </p>
+                    <p>
+                      <strong>Year:</strong> {product.productYear}
+                    </p>
+                    <p>
+                      <strong>Value:</strong> ${product.value}
+                    </p>
+                    <p>
+                      <strong>Sold:</strong>{' '}
+                      {product.status == 'sold' ? 'Yes' : 'No'}
+                    </p>
                   </div>
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className={styles.detailsButton}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditProduct(product)
+                      setIsModalOpen(true)
+                    }}
+                    className={styles.editButton}
+                  >
+                    <i className="fa-solid fa-pen"></i> Editar
+                  </button>
+                  <PDFDownloadLink
+                    document={
+                      <Certificate
+                        artworkImage=""
+                        title={product.title}
+                        dimensions={product.measurements || 'N/A'}
+                        year={parseInt(product.productYear) || 0}
+                        technique={product.artTechnique}
+                        artist={product?.artists?.name || 'Unknown Artist'}
+                      />
+                    }
+                    fileName={`certificate-${product.title}.pdf`}
+                    className={styles.pdfButton}
+                  >
+                    {({ loading }) =>
+                      loading ? 'Generating...' : 'Download Certificate'
+                    }
+                  </PDFDownloadLink>
                 </div>
               </div>
             ))}
@@ -234,9 +262,26 @@ export const Products = () => {
 
       <AddProductModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSuccess={handleSuccess}
+        editData={editProduct}
       />
+
+      {descriptionModal && (
+        <div className={styles.modal} onClick={() => setDescriptionModal(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Descrição Completa</h3>
+              <button onClick={() => setDescriptionModal(null)} className={styles.closeButton}>
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <p>{descriptionModal}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

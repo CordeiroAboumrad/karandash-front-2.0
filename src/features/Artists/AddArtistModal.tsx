@@ -1,35 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Oval } from 'react-loader-spinner'
-import { createArtist } from '../../data/apis/requests'
+import { createArtist, adjustArtist } from '../../data/apis/requests'
 import styles from './AddArtistModal.module.css'
 import { Artist } from '../../data/apis/types'
+import { ArtistSchema } from '../../data/schemas/schemas'
 
 interface AddArtistModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  editData?: ArtistSchema | null
 }
 
 export const AddArtistModal = ({
   isOpen,
   onClose,
   onSuccess,
+  editData,
 }: AddArtistModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<Artist>()
+
+  useEffect(() => {
+    if (editData) {
+      setValue('artistName', editData?.name)
+      setValue('dateOfBirth', editData?.dateofbirth)
+      setValue('placeOfBirth', editData?.placeofbirth)
+      setValue('history', editData?.history)
+    } else {
+      reset()
+    }
+  }, [editData, setValue, reset])
 
   if (!isOpen) return null
 
   const onSubmit = async (data: Artist) => {
     setIsLoading(true)
     try {
-      await createArtist(data)
+      if (editData) {
+        await adjustArtist(editData.id, data)
+      } else {
+        await createArtist(data)
+      }
       reset()
       onSuccess()
       onClose()
@@ -43,7 +62,7 @@ export const AddArtistModal = ({
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>Add New Artist</h2>
+        <h2>{editData ? 'Edit Artist' : 'Add New Artist'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Name *</label>
@@ -96,8 +115,10 @@ export const AddArtistModal = ({
                   color="#fff"
                   secondaryColor="#fff"
                 />
+              ) : editData ? (
+                'Atualizar Artista'
               ) : (
-                'Add Artist'
+                '+ Artista'
               )}
             </button>
           </div>

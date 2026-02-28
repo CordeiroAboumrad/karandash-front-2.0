@@ -2,14 +2,22 @@ import { useState } from 'react'
 import { useGetCustomersQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
 import { AddCustomerModal } from './AddCustomerModal'
+import { CustomerSchema } from '../../data/schemas/schemas'
 import styles from './Customers.module.css'
 
 export const Customers = () => {
   const customersQuery = useGetCustomersQuery()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editCustomer, setEditCustomer] = useState<CustomerSchema | undefined>(undefined)
+  const [addressModal, setAddressModal] = useState<string | null>(null)
 
   const handleSuccess = () => {
     customersQuery.refetch()
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setEditCustomer(undefined)
   }
 
   return (
@@ -45,15 +53,36 @@ export const Customers = () => {
           <div className={styles.customersGrid}>
             {customersQuery.data.map((customer, index) => (
               <div key={index} className={styles.customerCard}>
-                <h3>{customer.name}</h3>
-                <div className={styles.customerInfo}>
-                  <p>
-                    <strong>Email:</strong> {customer.email}
-                  </p>
-                  <p>
-                    <strong>Endereço:</strong> {customer.address}
-                  </p>
+                <div className={styles.cardContent}>
+                  <h3>{customer.name}</h3>
+                  <div className={styles.customerInfo}>
+                    <p>
+                      <strong>Email:</strong> {customer.email}
+                    </p>
+                    <div className={styles.addressContainer}>
+                      <div className={styles.addressHeader}>
+                        <button
+                          onClick={() => setAddressModal(customer.address || '')}
+                          className={styles.magnifierButton}
+                          title="Ver endereço completo"
+                        >
+                          <i className="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <strong>Endereço:</strong>
+                      </div>
+                    </div>
+                    <p className={styles.addressText}>{customer.address}</p>
+                  </div>
                 </div>
+                <button
+                  onClick={() => {
+                    setEditCustomer(customer)
+                    setIsModalOpen(true)
+                  }}
+                  className={styles.editButton}
+                >
+                  <i className="fa-solid fa-pen"></i> Editar
+                </button>
               </div>
             ))}
           </div>
@@ -61,9 +90,26 @@ export const Customers = () => {
 
       <AddCustomerModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSuccess={handleSuccess}
+        editData={editCustomer}
       />
+
+      {addressModal && (
+        <div className={styles.modal} onClick={() => setAddressModal(null)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3>Endereço Completo</h3>
+              <button onClick={() => setAddressModal(null)} className={styles.closeButton}>
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <p>{addressModal}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

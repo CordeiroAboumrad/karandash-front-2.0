@@ -21,8 +21,8 @@ export const createArtist = async (artistData: Artist) => {
   return res.data
 }
 
-export const adjustArtist = async (artistData: Artist) => {
-  const res = await karandashClient.put('/artists', artistData)
+export const adjustArtist = async (artistID: number, artistData: Artist) => {
+  const res = await karandashClient.put(`/artists/${artistID}`, artistData)
   return res.data
 }
 
@@ -31,6 +31,14 @@ export const registerCustomer = async (customerData: Customer) => {
     '/customer/input-customer',
     customerData
   )
+  return res.data
+}
+
+export const updateCustomer = async (
+  customerId: number,
+  customerData: Customer
+) => {
+  const res = await karandashClient.put(`/customer/${customerId}`, customerData)
   return res.data
 }
 
@@ -46,6 +54,14 @@ export const getAllCustomers = async (): Promise<CustomersSchema> => {
 
 export const createProduct = async (productData: Product) => {
   const res = await karandashClient.post('/product/create-product', productData)
+  return res.data
+}
+
+export const updateProduct = async (
+  productId: number,
+  productData: Product
+) => {
+  const res = await karandashClient.put(`/product/${productId}`, productData)
   return res.data
 }
 

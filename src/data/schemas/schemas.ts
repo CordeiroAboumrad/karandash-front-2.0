@@ -7,16 +7,6 @@ export const LoginFormSchema = z.object({
 
 export type LoginForm = z.input<typeof LoginFormSchema>
 
-export const ArtistFormSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  dateofbirth: z.string(),
-  placeofbirth: z.string(),
-  history: z.string(),
-  createdat: z.string(),
-  updatedat: z.string(),
-})
-
 export const ArtistSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -26,6 +16,8 @@ export const ArtistSchema = z.object({
   createdat: z.string(),
   updatedat: z.string(),
 })
+
+export type ArtistSchema = z.infer<typeof ArtistSchema>
 
 export const ArtistsResultSchema = z.array(ArtistSchema.optional())
 
@@ -39,6 +31,14 @@ export const CustomersResultSchema = z.array(
     createdat: z.string(),
   })
 )
+
+export type CustomerSchema = {
+  id: number
+  name: string
+  address: string
+  email: string
+  createdat: string
+}
 
 export type CustomersSchema = z.infer<typeof CustomersResultSchema>
 

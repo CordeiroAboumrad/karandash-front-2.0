@@ -1,35 +1,53 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Oval } from 'react-loader-spinner'
-import { registerCustomer } from '../../data/apis/requests'
+import { registerCustomer, updateCustomer } from '../../data/apis/requests'
 import styles from './AddCustomerModal.module.css'
 import { Customer } from '../../data/apis/types'
+import { CustomerSchema } from '../../data/schemas/schemas'
 
 interface AddCustomerModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  editData?: CustomerSchema | undefined
 }
 
 export const AddCustomerModal = ({
   isOpen,
   onClose,
   onSuccess,
+  editData,
 }: AddCustomerModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<Customer>()
+
+  useEffect(() => {
+    if (editData) {
+      setValue('customerName', editData.name)
+      setValue('email', editData.email)
+      setValue('address', editData.address)
+    } else {
+      reset()
+    }
+  }, [editData, setValue, reset])
 
   if (!isOpen) return null
 
   const onSubmit = async (data: Customer) => {
     setIsLoading(true)
     try {
-      await registerCustomer(data)
+      if (editData) {
+        await updateCustomer(editData.id, data)
+      } else {
+        await registerCustomer(data)
+      }
       reset()
       onSuccess()
       onClose()
@@ -43,7 +61,7 @@ export const AddCustomerModal = ({
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>Add New Customer</h2>
+        <h2>{editData ? 'Edit Customer' : 'Add New Customer'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Name *</label>
@@ -89,8 +107,10 @@ export const AddCustomerModal = ({
                   color="#fff"
                   secondaryColor="#fff"
                 />
+              ) : editData ? (
+                'Atualizar Cliente'
               ) : (
-                'Add Customer'
+                '+ Cliente'
               )}
             </button>
           </div>
