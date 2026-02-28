@@ -6,6 +6,8 @@ import { styles } from './styles'
 
 type CertificateProps = {
   artworkImage: string
+  imageWidth?: number
+  imageHeight?: number
   title: string
   dimensions: string
   year: number
@@ -15,6 +17,8 @@ type CertificateProps = {
 
 export function Certificate({
   artworkImage,
+  imageWidth = 180,
+  imageHeight = 180,
   title,
   dimensions,
   year,
@@ -43,7 +47,11 @@ export function Certificate({
         </Text>
 
         {/* ARTWORK IMAGE */}
-        <Image src={artworkImage} style={styles.artwork} />
+        {artworkImage && (
+          <View style={styles.artworkContainer}>
+            <Image src={artworkImage} style={{ width: imageWidth, height: imageHeight, objectFit: 'contain' }} />
+          </View>
+        )}
 
         {/* SIGNATURES */}
         <View style={styles.signatures}>

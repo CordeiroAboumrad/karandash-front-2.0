@@ -11,7 +11,7 @@ import { Artists } from '../features/Artists'
 import { Customers } from '../features/Customers'
 import { Products } from '../features/Products'
 import { ProductDetails } from '../features/Products/ProductDetails'
-import { Reports } from '../features/Reports'
+import { NotFound } from '../features/NotFound'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RegularRoutes } from './routes'
 
@@ -32,7 +32,7 @@ export const AppRouter = createBrowserRouter(
         <Route path={RegularRoutes.CUSTOMERS} element={<Customers />} />
         <Route path={RegularRoutes.PRODUCTS} element={<Products />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path={RegularRoutes.REPORTS} element={<Reports />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </>
   )

@@ -1,4 +1,4 @@
-import { PDFDownloadLink } from '@react-pdf/renderer'
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
 import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductImagesQuery,
 } from '../../data/queries/karandashQueries'
-import { saveProductImage } from '../../data/apis/requests'
+import { saveProductImage, getImageAsBase64 } from '../../data/apis/requests'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
 
@@ -16,8 +16,12 @@ export const ProductDetails = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
-  console.log(id)
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string>('')
+  const [imageBase64, setImageBase64] = useState<string>('')
+  const [imageWidth, setImageWidth] = useState(180)
+  const [imageHeight, setImageHeight] = useState(180)
 
   const navigate = useNavigate()
   const productQuery = useGetProductByIdQuery(id || '')
@@ -71,6 +75,49 @@ export const ProductDetails = () => {
   const handleCancelUpload = () => {
     setShowModal(false)
     setSelectedFiles([])
+  }
+
+  const handleRotate = () => {
+    if (!imageBase64) return
+
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.height
+      canvas.height = img.width
+
+      const ctx = canvas.getContext('2d')!
+      ctx.translate(canvas.width / 2, canvas.height / 2)
+      ctx.rotate((90 * Math.PI) / 180)
+      ctx.drawImage(img, -img.width / 2, -img.height / 2)
+
+      setImageBase64(canvas.toDataURL('image/jpeg', 0.8))
+    }
+    img.src = imageBase64
+  }
+
+  const handleImageSelect = async (imageUrl: string) => {
+    if (imageUrl === selectedImageUrl) {
+      setSelectedImageUrl('')
+      setImageBase64('')
+      return
+    }
+    setSelectedImageUrl(imageUrl)
+    try {
+      const base64 = await getImageAsBase64(imageUrl)
+      setImageBase64(base64)
+    } catch (error) {
+      toast.error('Failed to load image')
+      setSelectedImageUrl('')
+    }
+  }
+
+  const handlePreviewClick = () => {
+    if (!imageBase64) {
+      toast.error('Please select one image for the certificate')
+      return
+    }
+    setShowPreviewModal(true)
   }
 
   if (productQuery.isFetching) {
@@ -229,41 +276,131 @@ export const ProductDetails = () => {
           </div>
         </div>
 
-        <PDFDownloadLink
-          document={
-            <Certificate
-              artworkImage=""
-              title={product.title}
-              dimensions={product.measurements || 'N/A'}
-              year={parseInt(product.productyear) || 0}
-              technique={product.arttechnique}
-              artist={product.artists?.name || 'Unknown Artist'}
-            />
-          }
-          fileName={`certificate-${product.title}.pdf`}
-          className={styles.pdfButton}
-        >
-          {({ loading }) =>
-            loading ? 'Generating...' : 'Download Certificate'
-          }
-        </PDFDownloadLink>
+        <div className={styles.certificateButtons}>
+          <button
+            onClick={handlePreviewClick}
+            className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
+          >
+            Preview Certificate
+          </button>
+          <PDFDownloadLink
+            key={`${imageBase64}-${imageWidth}-${imageHeight}`}
+            document={
+              <Certificate
+                artworkImage={imageBase64}
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
+                title={product.title}
+                dimensions={product.measurements || 'N/A'}
+                year={parseInt(product.productyear) || 0}
+                technique={product.arttechnique}
+                artist={product.artists?.name || 'Unknown Artist'}
+              />
+            }
+            fileName={`certificate-${product.title}.pdf`}
+            className={`${styles.pdfButton} ${!imageBase64 ? styles.disabled : ''}`}
+            onClick={(e) => {
+              if (!imageBase64) {
+                e.preventDefault()
+                toast.error('Please select one image for the certificate')
+              }
+            }}
+          >
+            {({ loading }) =>
+              loading ? 'Generating...' : 'Download Certificate'
+            }
+          </PDFDownloadLink>
+        </div>
 
         {imagesQuery.data && imagesQuery.data.length > 0 && (
           <div className={styles.imagesSection}>
             <h2>Product Images</h2>
+            <p className={styles.imageInstruction}>
+              Click on an image to select it for the certificate
+            </p>
             <div className={styles.imagesGrid}>
               {imagesQuery.data.map((img: any) => (
-                <div key={img.id} className={styles.imageCard}>
+                <div
+                  key={img.id}
+                  className={`${styles.imageCard} ${selectedImageUrl === img.mediaurl ? styles.selected : ''}`}
+                  onClick={() => handleImageSelect(img.mediaurl)}
+                >
                   <img
                     src={img.mediaurl}
                     alt={`Product ${img.mediadisplayposition}`}
                   />
+                  {selectedImageUrl === img.mediaurl && (
+                    <div className={styles.selectedBadge}>✓</div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
+
+      {showPreviewModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowPreviewModal(false)}
+        >
+          <div
+            className={styles.previewModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.previewHeader}>
+              <button
+                onClick={handleRotate}
+                className={styles.rotateButtonModal}
+              >
+                <i className="fas fa-redo" style={{ fontSize: '0.8rem' }}></i>
+                Rotacionar Imagem
+              </button>
+              <div className={styles.sizeControls}>
+                <label>
+                  Width:
+                  <input
+                    type="number"
+                    value={imageWidth}
+                    onChange={(e) => setImageWidth(Number(e.target.value))}
+                    className={styles.sizeInput}
+                  />
+                </label>
+                <label>
+                  Height:
+                  <input
+                    type="number"
+                    value={imageHeight}
+                    onChange={(e) => setImageHeight(Number(e.target.value))}
+                    className={styles.sizeInput}
+                  />
+                </label>
+              </div>
+              <button
+                onClick={() => setShowPreviewModal(false)}
+                className={styles.closeButton}
+              >
+                ×
+              </button>
+            </div>
+            <PDFViewer
+              className={styles.pdfViewer}
+              key={`${imageBase64}-${imageWidth}-${imageHeight}`}
+            >
+              <Certificate
+                artworkImage={imageBase64}
+                imageWidth={imageWidth}
+                imageHeight={imageHeight}
+                title={product.title}
+                dimensions={product.measurements || 'N/A'}
+                year={parseInt(product.productyear) || 0}
+                technique={product.arttechnique}
+                artist={product.artists?.name || 'Unknown Artist'}
+              />
+            </PDFViewer>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

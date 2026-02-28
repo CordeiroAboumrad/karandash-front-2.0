@@ -64,6 +64,20 @@ export const getAllProducts = async (
   return res.data
 }
 
+export const searchProducts = async (
+  artist?: string,
+  name?: string,
+  minPrice?: number,
+  maxPrice?: number,
+  page: number = 0,
+  size: number = 10
+): Promise<ProductsSchema> => {
+  const res = await karandashClient.get('/product/search', {
+    params: { artist, name, minPrice, maxPrice, page, size },
+  })
+  return res.data
+}
+
 export const saveProductImage = async (productId: number, files: File[]) => {
   const formData = new FormData()
   formData.append('productId', productId.toString())
@@ -77,6 +91,11 @@ export const saveProductImage = async (productId: number, files: File[]) => {
 export const getProductImages = async (productId: number) => {
   const res = await karandashClient.get(`/product/images/${productId}`)
   return res.data
+}
+
+export const getImageAsBase64 = async (imageUrl: string) => {
+  const res = await karandashClient.post('/product/image-proxy', { imageUrl })
+  return res.data.base64
 }
 
 export const deleteProduct = async (id: number, displayPosition: number) => {

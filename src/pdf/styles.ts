@@ -41,10 +41,15 @@ export const styles = StyleSheet.create({
     marginBottom: 25,
   },
 
+  artworkContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+
   artwork: {
     width: 180,
-    alignSelf: 'center',
-    marginVertical: 20,
+    height: 180,
+    objectFit: 'contain',
   },
 
   signatures: {
