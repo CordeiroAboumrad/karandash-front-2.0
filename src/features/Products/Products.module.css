@@ -37,6 +37,15 @@
   min-width: 150px;
 }
 
+.searchSelect {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  flex: 1;
+  min-width: 150px;
+}
+
 .searchButton {
   padding: 0.5rem 1rem;
   background-color: #cc0000;

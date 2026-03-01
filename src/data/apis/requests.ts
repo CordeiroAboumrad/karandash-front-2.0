@@ -85,11 +85,12 @@ export const searchProducts = async (
   name?: string,
   minPrice?: number,
   maxPrice?: number,
+  sold?: boolean,
   page: number = 0,
   size: number = 10
 ): Promise<ProductsSchema> => {
   const res = await karandashClient.get('/product/search', {
-    params: { artist, name, minPrice, maxPrice, page, size },
+    params: { artist, name, minPrice, maxPrice, sold, page, size },
   })
   return res.data
 }

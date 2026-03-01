@@ -13,6 +13,9 @@ export const Products = () => {
   const [name, setName] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
+  const [soldFilter, setSoldFilter] = useState<'all' | 'sold' | 'notSold'>(
+    'all'
+  )
   const [products, setProducts] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -30,6 +33,7 @@ export const Products = () => {
         name || undefined,
         minPrice ? Number(minPrice) : undefined,
         maxPrice ? Number(maxPrice) : undefined,
+        soldFilter === 'all' ? undefined : soldFilter === 'sold',
         page,
         size
       )
@@ -55,14 +59,9 @@ export const Products = () => {
     setName('')
     setMinPrice('')
     setMaxPrice('')
+    setSoldFilter('all')
     setPage(0)
   }
-
-  useEffect(() => {
-    if (!artist && !name && !minPrice && !maxPrice) {
-      fetchProducts()
-    }
-  }, [artist, name, minPrice, maxPrice])
 
   const handleSuccess = () => {
     fetchProducts()
@@ -129,6 +128,17 @@ export const Products = () => {
           onChange={(e) => setMaxPrice(e.target.value)}
           className={styles.searchInput}
         />
+        <select
+          value={soldFilter}
+          onChange={(e) =>
+            setSoldFilter(e.target.value as 'all' | 'sold' | 'notSold')
+          }
+          className={styles.searchSelect}
+        >
+          <option value="all">Todos</option>
+          <option value="sold">Vendidos</option>
+          <option value="notSold">Não Vendidos</option>
+        </select>
         <button onClick={handleSearch} className={styles.searchButton}>
           Search
         </button>
