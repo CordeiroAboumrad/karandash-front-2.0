@@ -23,6 +23,7 @@ export interface Product {
   value: number
   productYear: string
   measurements: string
+  sold: boolean
 }
 
 export interface User {

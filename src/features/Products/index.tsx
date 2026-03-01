@@ -1,10 +1,8 @@
-import { PDFDownloadLink } from '@react-pdf/renderer'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Oval } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom'
-import { searchProducts } from '../../data/apis/requests'
+import { deleteProduct, searchProducts } from '../../data/apis/requests'
 import { ProductSchema } from '../../data/schemas/schemas'
-import { Certificate } from '../../pdf/Certificate'
 import { AddProductModal } from './AddProductModal'
 import styles from './Products.module.css'
 
@@ -18,7 +16,9 @@ export const Products = () => {
   const [products, setProducts] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editProduct, setEditProduct] = useState<ProductSchema | undefined>(undefined)
+  const [editProduct, setEditProduct] = useState<ProductSchema | undefined>(
+    undefined
+  )
   const [descriptionModal, setDescriptionModal] = useState<string | null>(null)
   const navigate = useNavigate()
 
@@ -71,6 +71,27 @@ export const Products = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setEditProduct(undefined)
+  }
+
+  const handleDeleteProduct = async (product: ProductSchema) => {
+    const shouldDelete = window.confirm(
+      `Delete product "${product.title}"? This action cannot be undone.`
+    )
+
+    if (!shouldDelete) {
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      await deleteProduct(product.id)
+      await fetchProducts()
+    } catch (error) {
+      console.error(error)
+      alert('Could not delete product. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -148,7 +169,11 @@ export const Products = () => {
                     <div className={styles.descriptionContainer}>
                       <div className={styles.descriptionHeader}>
                         <button
-                          onClick={() => setDescriptionModal(product.description.toString() || '')}
+                          onClick={() =>
+                            setDescriptionModal(
+                              product.description.toString() || ''
+                            )
+                          }
                           className={styles.magnifierButton}
                           title="Ver descrição completa"
                         >
@@ -157,7 +182,9 @@ export const Products = () => {
                         <strong>Description:</strong>
                       </div>
                     </div>
-                    <p className={styles.descriptionText}>{product.description}</p>
+                    <p className={styles.descriptionText}>
+                      {product.description}
+                    </p>
                     <p>
                       <strong>Company:</strong> {product.company}
                     </p>
@@ -187,7 +214,7 @@ export const Products = () => {
                     onClick={() => navigate(`/product/${product.id}`)}
                     className={styles.detailsButton}
                   >
-                    View Details
+                    Ver Detalhes
                   </button>
                   <button
                     onClick={() => {
@@ -198,24 +225,12 @@ export const Products = () => {
                   >
                     <i className="fa-solid fa-pen"></i> Editar
                   </button>
-                  <PDFDownloadLink
-                    document={
-                      <Certificate
-                        artworkImage=""
-                        title={product.title}
-                        dimensions={product.measurements || 'N/A'}
-                        year={parseInt(product.productYear) || 0}
-                        technique={product.artTechnique}
-                        artist={product?.artists?.name || 'Unknown Artist'}
-                      />
-                    }
-                    fileName={`certificate-${product.title}.pdf`}
-                    className={styles.pdfButton}
+                  <button
+                    onClick={() => handleDeleteProduct(product)}
+                    className={styles.deleteButton}
                   >
-                    {({ loading }) =>
-                      loading ? 'Generating...' : 'Download Certificate'
-                    }
-                  </PDFDownloadLink>
+                    <i className="fa-solid fa-trash"></i> Excluir
+                  </button>
                 </div>
               </div>
             ))}
@@ -269,10 +284,16 @@ export const Products = () => {
 
       {descriptionModal && (
         <div className={styles.modal} onClick={() => setDescriptionModal(null)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
               <h3>Descrição Completa</h3>
-              <button onClick={() => setDescriptionModal(null)} className={styles.closeButton}>
+              <button
+                onClick={() => setDescriptionModal(null)}
+                className={styles.closeButton}
+              >
                 <i className="fa-solid fa-xmark"></i>
               </button>
             </div>

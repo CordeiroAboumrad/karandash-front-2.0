@@ -214,6 +214,26 @@
   background-color: #f0f0f0;
 }
 
+.deleteButton {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.5rem 1rem;
+  background-color: #cc0000;
+  color: white;
+  border: 1px solid #cc0000;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.deleteButton:hover {
+  background-color: #aa0000;
+}
+
 .pdfButton {
   flex: 1;
   min-width: 120px;

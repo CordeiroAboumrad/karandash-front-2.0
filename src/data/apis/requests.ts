@@ -114,7 +114,15 @@ export const getImageAsBase64 = async (imageUrl: string) => {
   return res.data.base64
 }
 
-export const deleteProduct = async (id: number, displayPosition: number) => {
+export const deleteProduct = async (productId: number) => {
+  const res = await karandashClient.delete(`/product/${productId}`)
+  return res.data
+}
+
+export const deleteProductImage = async (
+  id: number,
+  displayPosition: number
+) => {
   const res = await karandashClient.delete('/product/delete-product', {
     data: {
       productId: id,

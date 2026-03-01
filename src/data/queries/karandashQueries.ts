@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import {
-  getAllCustomers,
   getAllArtists,
-  getAllProducts,
+  getAllCustomers,
   getProductById,
   getProductImages,
 } from '../apis/requests'
@@ -19,14 +18,6 @@ export const useGetCustomersQuery = () => {
   return useQuery({
     queryKey: ['customers'],
     queryFn: () => getAllCustomers(),
-    refetchOnWindowFocus: false,
-  })
-}
-
-export const useGetAllProductsQuery = (page: number = 0, size: number = 10) => {
-  return useQuery({
-    queryKey: ['products', page, size],
-    queryFn: () => getAllProducts(page, size),
     refetchOnWindowFocus: false,
   })
 }

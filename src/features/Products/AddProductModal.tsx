@@ -38,6 +38,8 @@ export const AddProductModal = ({
       setValue('artTechnique', editData.artTechnique)
       setValue('productYear', editData.productYear)
       setValue('value', editData.value)
+      setValue('measurements', editData.measurements)
+      setValue('sold', editData.sold)
     } else {
       reset()
     }
@@ -107,6 +109,26 @@ export const AddProductModal = ({
               type="text"
               {...register('artTechnique')}
             />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="measurements">Measurements</label>
+            <input
+              id="measurements"
+              type="text"
+              {...register('measurements')}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <div className={styles.toggleRow}>
+              <span className={styles.toggleLabel}>Sold</span>
+
+              <label className={styles.switch}>
+                <input type="checkbox" {...register('sold')} />
+                <span className={styles.slider}></span>
+              </label>
+            </div>
           </div>
 
           <div className={styles.formGroup}>
