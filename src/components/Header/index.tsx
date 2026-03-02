@@ -1,13 +1,16 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { isSuperUser } from '../../data/auth/roles'
 import { RegularRoutes } from '../../router/routes'
 import styles from './Header.module.css'
 
 export const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const canManageUsers = isSuperUser()
 
   const handleLogout = () => {
     localStorage.removeItem('bearerToken')
+    localStorage.removeItem('userRoles')
     navigate(RegularRoutes.LOGIN)
   }
 
@@ -41,6 +44,16 @@ export const Header = () => {
         >
           Produtos
         </Link>
+        {canManageUsers && (
+          <Link
+            to={RegularRoutes.USERS}
+            className={`${styles.navLink} ${
+              location.pathname === RegularRoutes.USERS ? styles.active : ''
+            }`}
+          >
+            Usuários
+          </Link>
+        )}
         <button onClick={handleLogout} className={styles.navLink}>
           Logout
         </button>

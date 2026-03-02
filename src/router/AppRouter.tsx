@@ -11,8 +11,10 @@ import { Artists } from '../features/Artists'
 import { Customers } from '../features/Customers'
 import { Products } from '../features/Products'
 import { ProductDetails } from '../features/Products/ProductDetails'
+import { Users } from '../features/Users'
 import { NotFound } from '../features/NotFound'
 import { ProtectedRoute } from './ProtectedRoute'
+import { SuperuserRoute } from './SuperuserRoute'
 import { RegularRoutes } from './routes'
 
 export const AppRouter = createBrowserRouter(
@@ -31,6 +33,14 @@ export const AppRouter = createBrowserRouter(
         <Route path={RegularRoutes.ARTISTS} element={<Artists />} />
         <Route path={RegularRoutes.CUSTOMERS} element={<Customers />} />
         <Route path={RegularRoutes.PRODUCTS} element={<Products />} />
+        <Route
+          path={RegularRoutes.USERS}
+          element={
+            <SuperuserRoute>
+              <Users />
+            </SuperuserRoute>
+          }
+        />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -4,6 +4,7 @@ export const RegularRoutes = {
   CUSTOMERS: "/customers",
   ARTISTS: "/artists",
   PRODUCTS: "/products",
+  USERS: "/users",
 };
 
 export const ErrorRoutes = {

@@ -3,6 +3,7 @@ import {
   ArtistsSchema,
   CustomersSchema,
   ProductsSchema,
+  UserCreateUpdate,
 } from '../schemas/schemas'
 import { Artist, Customer, Product, User } from './types'
 
@@ -135,12 +136,17 @@ export const deleteProductImage = async (
 
 export const getRole = async (roleName: string) => {}
 
-export const createUser = async (user: User) => {
+export const getAllUsers = async (): Promise<User[]> => {
+  const res = await karandashClient.get('/user')
+  return res.data
+}
+
+export const createUser = async (user: UserCreateUpdate) => {
   const res = await karandashClient.post('/user', user)
   return res.data
 }
 
-export const changeUser = async (user: User) => {
+export const changeUser = async (user: UserCreateUpdate) => {
   const res = await karandashClient.patch('/user', user)
   return res.data
 }
@@ -154,7 +160,7 @@ export const deleteUser = async (userId: string) => {
   return res.data
 }
 
-export const createAdmin = async (user: User) => {
+export const createAdmin = async (user: UserCreateUpdate) => {
   const res = await karandashClient.post('/user/create-admin', user)
   return res.data
 }

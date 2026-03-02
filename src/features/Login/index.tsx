@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Oval } from 'react-loader-spinner'
 import karandashLogo from '../../assets/karandash.png'
 import { login } from '../../data/apis/requests'
+import { storeRolesFromLogin } from '../../data/auth/roles'
 import { LoginForm } from '../../data/schemas/schemas'
 import { RegularRoutes } from '../../router/routes'
 import styles from './Login.module.css'
@@ -27,6 +28,7 @@ export const Login = () => {
     try {
       const res = await login(email, password)
       localStorage.setItem('bearerToken', res.sessionId)
+      storeRolesFromLogin(res)
       sessionStorage.setItem('isAuthenticated', 'true')
       navigate(RegularRoutes.HOME)
     } catch (error) {

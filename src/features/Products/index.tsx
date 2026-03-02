@@ -102,28 +102,28 @@ export const Products = () => {
       <div className={styles.searchContainer}>
         <input
           type="text"
-          placeholder="Artist"
+          placeholder="Artista"
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
           className={styles.searchInput}
         />
         <input
           type="text"
-          placeholder="Product Name"
+          placeholder="Nome do Produto"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={styles.searchInput}
         />
         <input
           type="number"
-          placeholder="Min Price"
+          placeholder="Preço Mínimo"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className={styles.searchInput}
         />
         <input
           type="number"
-          placeholder="Max Price"
+          placeholder="Preço Máximo"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className={styles.searchInput}
@@ -140,10 +140,10 @@ export const Products = () => {
           <option value="notSold">Não Vendidos</option>
         </select>
         <button onClick={handleSearch} className={styles.searchButton}>
-          Search
+          Procurar
         </button>
         <button onClick={handleClearSearch} className={styles.clearButton}>
-          Clear
+          Limpar
         </button>
       </div>
 

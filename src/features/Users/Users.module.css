@@ -1,0 +1,212 @@
+.users {
+  padding: 1rem;
+  width: 95%;
+  max-width: 99%;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 220px;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.addButton {
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background-color: #333;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.table th,
+.table td {
+  border: 1px solid black;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f6f6f6;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton {
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.editButton {
+  background-color: white;
+  color: black;
+}
+
+.editButton:hover {
+  background-color: #f0f0f0;
+}
+
+.deleteButton {
+  background-color: #cc0000;
+  color: white;
+  border-color: #cc0000;
+}
+
+.deleteButton:hover {
+  background-color: #aa0000;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  width: 95%;
+  max-width: 720px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  border-bottom: 1px solid black;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalHeader h3 {
+  margin: 0;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.form {
+  padding: 1rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.formGroup input {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.checkboxLabel {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.modalActions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.cancelButton,
+.submitButton {
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.cancelButton {
+  border: 1px solid black;
+  background-color: white;
+}
+
+.cancelButton:hover {
+  background-color: #f0f0f0;
+}
+
+.submitButton {
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #333;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

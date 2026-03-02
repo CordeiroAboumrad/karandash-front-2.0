@@ -74,3 +74,15 @@ export const ProductsResultSchema = z.object({
 export type ProductSchema = z.infer<typeof ProductResultSchema>
 
 export type ProductsSchema = z.infer<typeof ProductsResultSchema>
+
+export const UserCreateUpdateSchema = z.object({
+  firstname: z.string(),
+  lastname: z.string(),
+  primaryemail: z.string().email('Email inválido'),
+  username: z
+    .string()
+    .min(3, 'O nome de usuário deve ter no mínimo 3 caracteres'),
+  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+})
+
+export type UserCreateUpdate = z.infer<typeof UserCreateUpdateSchema>
