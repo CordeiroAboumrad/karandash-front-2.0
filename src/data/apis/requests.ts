@@ -4,6 +4,7 @@ import {
   CustomersSchema,
   ProductsSchema,
   UserCreateParams,
+  UserCredentialRedefinition,
   UserUpdateParams,
 } from '../schemas/schemas'
 import { Artist, Customer, Product, User } from './types'
@@ -28,6 +29,13 @@ const normalizeUser = (user: RawUser): User => ({
 
 export const login = async (email: string, password: string) => {
   const res = await karandashClient.post('/auth/login', { email, password })
+  return res.data
+}
+
+export const redefineCredentials = async (
+  payload: UserCredentialRedefinition
+) => {
+  const res = await karandashClient.post('/user/redefine-credentials', payload)
   return res.data
 }
 

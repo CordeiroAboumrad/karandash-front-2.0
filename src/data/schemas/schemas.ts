@@ -7,6 +7,19 @@ export const LoginFormSchema = z.object({
 
 export type LoginForm = z.input<typeof LoginFormSchema>
 
+export const UserCredentialRedefinitionSchema = z.object({
+  currentEmail: z.email('Invalid email'),
+  currentPassword: z
+    .string()
+    .min(6, 'Password must be at least 6 characters'),
+  newEmail: z.email('Invalid email').optional(),
+  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+export type UserCredentialRedefinition = z.input<
+  typeof UserCredentialRedefinitionSchema
+>
+
 export const ArtistSchema = z.object({
   id: z.number(),
   name: z.string(),
