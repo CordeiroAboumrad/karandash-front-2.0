@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const LoginFormSchema = z.object({
-  email: z.email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+  email: z.email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 })
 
 export type LoginForm = z.input<typeof LoginFormSchema>
@@ -75,14 +75,28 @@ export type ProductSchema = z.infer<typeof ProductResultSchema>
 
 export type ProductsSchema = z.infer<typeof ProductsResultSchema>
 
-export const UserCreateUpdateSchema = z.object({
-  firstname: z.string(),
-  lastname: z.string(),
-  primaryemail: z.string().email('Email inválido'),
+export const UserCreateParamsSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  primaryEmail: z.email('Invalid email'),
   username: z
     .string()
-    .min(3, 'O nome de usuário deve ter no mínimo 3 caracteres'),
-  password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+    .min(3, 'Username must be at least 3 characters'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  admin: z.boolean().optional(),
 })
 
-export type UserCreateUpdate = z.infer<typeof UserCreateUpdateSchema>
+export type UserCreateParams = z.infer<typeof UserCreateParamsSchema>
+
+export const UserUpdateParamsSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  primaryEmail: z.email('Invalid email'),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters'),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional(),
+})
+
+export type UserUpdateParams = z.infer<typeof UserUpdateParamsSchema>
+

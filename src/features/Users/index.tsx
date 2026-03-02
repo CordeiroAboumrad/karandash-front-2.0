@@ -1,15 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Oval } from 'react-loader-spinner'
 import {
   changeUser,
-  createAdmin,
   createUser,
   deleteUser,
   getAllUsers,
 } from '../../data/apis/requests'
 import { User } from '../../data/apis/types'
 import styles from './Users.module.css'
-import { UserCreateUpdate } from '../../data/schemas/schemas'
+import { UserCreateParams, UserUpdateParams } from '../../data/schemas/schemas'
 
 type UserFormState = {
   firstName: string
@@ -57,7 +56,7 @@ export const Users = () => {
       setUsers(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error(error)
-      alert('Houve um problema ao carregar os usuários.')
+      alert('Houve um problema ao carregar os usuérios.')
     } finally {
       setIsLoading(false)
     }
@@ -74,11 +73,11 @@ export const Users = () => {
     }
 
     return users.filter((user) => {
-      const fullName = `${user.firstname} ${user.lastname}`.toLowerCase()
+      const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
       return (
         fullName.includes(term) ||
         user.username.toLowerCase().includes(term) ||
-        user.primaryemail.toLowerCase().includes(term) ||
+        user.primaryEmail.toLowerCase().includes(term) ||
         user.id.toLowerCase().includes(term)
       )
     })
@@ -91,14 +90,20 @@ export const Users = () => {
   }
 
   const openEditModal = (user: User) => {
+    const isAdminUser =
+      user.role === 'ADMIN' ||
+      user.role === 'SUPERADMIN' ||
+      (Array.isArray(user.roles) &&
+        user.roles.some((role) => role === 'ADMIN' || role === 'SUPERADMIN'))
+
     setEditingUser(user)
     setForm({
-      firstName: user.firstname,
-      lastName: user.lastname,
-      primaryEmail: user.primaryemail,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      primaryEmail: user.primaryEmail,
       username: user.username,
       password: '',
-      isAdmin: false,
+      isAdmin: isAdminUser,
     })
     setIsModalOpen(true)
   }
@@ -119,27 +124,34 @@ export const Users = () => {
       !form.lastName ||
       !form.primaryEmail ||
       !form.username ||
-      !form.password
+      (!editingUser && !form.password)
     ) {
-      alert('Preencha todos os campos obrigatórios.')
+      alert('Preencha todos os campos obrigatorios.')
       return
-    }
-
-    const payload: UserCreateUpdate = {
-      firstname: form.firstName,
-      lastname: form.lastName,
-      primaryemail: form.primaryEmail,
-      username: form.username,
-      password: form.password,
     }
 
     setIsSaving(true)
     try {
       if (editingUser) {
-        await changeUser(payload)
-      } else if (form.isAdmin) {
-        await createAdmin(payload)
+        const payload: UserUpdateParams = {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          primaryEmail: form.primaryEmail,
+          username: form.username,
+          ...(form.password ? { password: form.password } : {}),
+        }
+
+        await changeUser(editingUser.id, payload, form.isAdmin)
       } else {
+        const payload: UserCreateParams = {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          primaryEmail: form.primaryEmail,
+          username: form.username,
+          password: form.password,
+          admin: form.isAdmin,
+        }
+
         await createUser(payload)
       }
 
@@ -147,7 +159,7 @@ export const Users = () => {
       await fetchUsers()
     } catch (error) {
       console.error(error)
-      alert('Houve um problema ao salvar o usuário.')
+      alert('Houve um problema ao salvar o usuario.')
     } finally {
       setIsSaving(false)
     }
@@ -204,7 +216,7 @@ export const Users = () => {
       )}
 
       {!isLoading && filteredUsers.length === 0 && (
-        <p>Nenhum usuário encontrado.</p>
+        <p>Nenhum usuÃ¡rio encontrado.</p>
       )}
 
       {!isLoading && filteredUsers.length > 0 && (
@@ -224,9 +236,9 @@ export const Users = () => {
               {filteredUsers.map((user) => (
                 <tr key={user.id}>
                   <td>{user.id}</td>
-                  <td>{`${user.firstname} ${user.lastname}`}</td>
+                  <td>{`${user.firstName} ${user.lastName}`}</td>
                   <td>{user.username}</td>
-                  <td>{user.primaryemail}</td>
+                  <td>{user.primaryEmail}</td>
                   <td>{getRoleLabel(user)}</td>
                   <td>
                     <div className={styles.actions}>
@@ -319,7 +331,7 @@ export const Users = () => {
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="password">
-                    {editingUser ? 'New Password' : 'Password'}
+                    {editingUser ? 'Nova Senha' : 'Senha'}
                   </label>
                   <input
                     id="password"
@@ -328,26 +340,24 @@ export const Users = () => {
                     onChange={(e) =>
                       setForm((prev) => ({ ...prev, password: e.target.value }))
                     }
-                    required
+                    required={!editingUser}
                   />
                 </div>
               </div>
 
-              {!editingUser && (
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={form.isAdmin}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        isAdmin: e.target.checked,
-                      }))
-                    }
-                  />
-                  Create as admin
-                </label>
-              )}
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={form.isAdmin}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      isAdmin: e.target.checked,
+                    }))
+                  }
+                />
+                {editingUser ? 'Admin user' : 'Create as admin'}
+              </label>
 
               <div className={styles.modalActions}>
                 <button

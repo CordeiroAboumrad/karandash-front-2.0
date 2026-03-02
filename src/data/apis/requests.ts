@@ -3,9 +3,28 @@ import {
   ArtistsSchema,
   CustomersSchema,
   ProductsSchema,
-  UserCreateUpdate,
+  UserCreateParams,
+  UserUpdateParams,
 } from '../schemas/schemas'
 import { Artist, Customer, Product, User } from './types'
+
+type RawUser = Partial<User> & {
+  userId?: string
+  firstname?: string
+  lastname?: string
+  primaryemail?: string
+}
+
+const normalizeUser = (user: RawUser): User => ({
+  id: user.id ?? user.userId ?? '',
+  firstName: user.firstName ?? user.firstname ?? '',
+  lastName: user.lastName ?? user.lastname ?? '',
+  primaryEmail: user.primaryEmail ?? user.primaryemail ?? '',
+  username: user.username ?? '',
+  password: user.password,
+  role: user.role,
+  roles: user.roles,
+})
 
 export const login = async (email: string, password: string) => {
   const res = await karandashClient.post('/auth/login', { email, password })
@@ -138,39 +157,37 @@ export const getRole = async (roleName: string) => {}
 
 export const getAllUsers = async (): Promise<User[]> => {
   const res = await karandashClient.get('/user')
-  return res.data
+  return Array.isArray(res.data) ? res.data.map(normalizeUser) : []
 }
 
-export const createUser = async (user: UserCreateUpdate) => {
+export const createUser = async (user: UserCreateParams) => {
   const res = await karandashClient.post('/user', user)
   return res.data
 }
 
-export const changeUser = async (user: UserCreateUpdate) => {
-  const res = await karandashClient.patch('/user', user)
-  return res.data
-}
-
-export const deleteUser = async (userId: string) => {
-  const res = await karandashClient.delete('/user', {
-    data: {
-      userId: userId,
-    },
+export const changeUser = async (
+  userId: string,
+  user: UserUpdateParams,
+  admin: boolean
+) => {
+  const res = await karandashClient.patch(`/user/${userId}`, {
+    ...user,
+    admin,
   })
   return res.data
 }
 
-export const createAdmin = async (user: UserCreateUpdate) => {
-  const res = await karandashClient.post('/user/create-admin', user)
+export const deleteUser = async (userId: string) => {
+  const res = await karandashClient.delete(`/user/${userId}`)
   return res.data
 }
 
 export const getUserById = async (userId: string) => {
   const res = await karandashClient.get(`/user/${userId}`)
-  return res.data
+  return normalizeUser(res.data ?? {})
 }
 
 export const getUserByUsername = async (username: string) => {
   const res = await karandashClient.get(`/user/username/${username}`)
-  return res.data
+  return normalizeUser(res.data ?? {})
 }

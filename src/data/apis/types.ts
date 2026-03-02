@@ -28,11 +28,11 @@ export interface Product {
 
 export interface User {
   id: string
-  firstname: string
-  lastname: string
-  primaryemail: string
+  firstName: string
+  lastName: string
+  primaryEmail: string
   username: string
-  password: string
+  password?: string
   role?: string
   roles?: string[]
 }
