@@ -56,7 +56,7 @@ export type CustomerSchema = {
 export type CustomersSchema = z.infer<typeof CustomersResultSchema>
 
 export const ProductResultSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   description: z.number(),
   title: z.string(),
   company: z.string(),

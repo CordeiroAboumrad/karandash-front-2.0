@@ -26,14 +26,16 @@ export const useGetProductByIdQuery = (id: string) => {
   return useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductById(id),
+    enabled: Boolean(id),
     refetchOnWindowFocus: false,
   })
 }
 
-export const useGetProductImagesQuery = (productId: number) => {
+export const useGetProductImagesQuery = (productId: string) => {
   return useQuery({
     queryKey: ['productImages', productId],
     queryFn: () => getProductImages(productId),
+    enabled: Boolean(productId),
     refetchOnWindowFocus: false,
   })
 }

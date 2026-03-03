@@ -27,7 +27,7 @@ export const ProductDetails = () => {
   const productQuery = useGetProductByIdQuery(id || '')
   const product = productQuery.data
 
-  const imagesQuery = useGetProductImagesQuery(product?.id || 0)
+  const imagesQuery = useGetProductImagesQuery(product?.id || '')
 
   const handleUploadClick = () => {
     fileInputRef.current?.click()

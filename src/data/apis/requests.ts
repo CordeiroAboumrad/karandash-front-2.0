@@ -86,7 +86,7 @@ export const createProduct = async (productData: Product) => {
 }
 
 export const updateProduct = async (
-  productId: number,
+  productId: string,
   productData: Product
 ) => {
   const res = await karandashClient.put(`/product/${productId}`, productData)
@@ -123,9 +123,9 @@ export const searchProducts = async (
   return res.data
 }
 
-export const saveProductImage = async (productId: number, files: File[]) => {
+export const saveProductImage = async (productId: string, files: File[]) => {
   const formData = new FormData()
-  formData.append('productId', productId.toString())
+  formData.append('productId', productId)
   files.forEach((file) => formData.append('files', file))
   const res = await karandashClient.post('/product/save-images', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
@@ -133,7 +133,7 @@ export const saveProductImage = async (productId: number, files: File[]) => {
   return res.data
 }
 
-export const getProductImages = async (productId: number) => {
+export const getProductImages = async (productId: string) => {
   const res = await karandashClient.get(`/product/images/${productId}`)
   return res.data
 }
@@ -143,13 +143,13 @@ export const getImageAsBase64 = async (imageUrl: string) => {
   return res.data.base64
 }
 
-export const deleteProduct = async (productId: number) => {
+export const deleteProduct = async (productId: string) => {
   const res = await karandashClient.delete(`/product/${productId}`)
   return res.data
 }
 
 export const deleteProductImage = async (
-  id: number,
+  id: string,
   displayPosition: number
 ) => {
   const res = await karandashClient.delete('/product/delete-product', {
