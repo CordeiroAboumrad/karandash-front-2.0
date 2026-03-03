@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Oval } from 'react-loader-spinner'
 import { createProduct, updateProduct } from '../../data/apis/requests'
+import { useGetArtistsQuery } from '../../data/queries/karandashQueries'
 import styles from './AddProductModal.module.css'
 import { Product } from '../../data/apis/types'
 import { ProductSchema } from '../../data/schemas/schemas'
@@ -20,6 +21,7 @@ export const AddProductModal = ({
   editData,
 }: AddProductModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const artistsQuery = useGetArtistsQuery()
   const {
     register,
     handleSubmit,
@@ -40,6 +42,7 @@ export const AddProductModal = ({
       setValue('value', editData.value)
       setValue('measurements', editData.measurements)
       setValue('sold', editData.sold)
+      setValue('artistId', editData.artistid ?? undefined)
     } else {
       reset()
     }
@@ -65,13 +68,18 @@ export const AddProductModal = ({
     }
   }
 
+  type ArtistOption = NonNullable<NonNullable<typeof artistsQuery.data>[number]>
+  const artists: ArtistOption[] = (artistsQuery.data ?? []).filter(
+    (artist): artist is ArtistOption => artist != null
+  )
+
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>{editData ? 'Edit Product' : 'Add New Product'}</h2>
+        <h2>{editData ? 'Editar Produto' : 'Adicionar Novo Produto'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
-            <label htmlFor="title">Title *</label>
+            <label htmlFor="title">Título *</label>
             <input
               id="title"
               type="text"
@@ -83,17 +91,17 @@ export const AddProductModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Descrição</label>
             <textarea id="description" rows={3} {...register('description')} />
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="company">Company</label>
+            <label htmlFor="company">Empresa</label>
             <input id="company" type="text" {...register('company')} />
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="type">Type</label>
+            <label htmlFor="type">Tipo</label>
             <input id="type" type="text" {...register('type')} />
           </div>
 
@@ -103,7 +111,26 @@ export const AddProductModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="arttechnique">Art Technique</label>
+            <label htmlFor="artistId">Artista</label>
+            <select
+              id="artistId"
+              {...register('artistId', {
+                setValueAs: (value) => (value === '' ? undefined : Number(value)),
+              })}
+            >
+              <option value="">
+                {artistsQuery.isFetching ? 'Carregando artistas...' : 'Selecione um artista'}
+              </option>
+              {artists.map((artist) => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="arttechnique">Técnica de Arte</label>
             <input
               id="arttechnique"
               type="text"
@@ -112,7 +139,7 @@ export const AddProductModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="measurements">Measurements</label>
+            <label htmlFor="measurements">Medidas</label>
             <input
               id="measurements"
               type="text"
@@ -122,7 +149,7 @@ export const AddProductModal = ({
 
           <div className={styles.formGroup}>
             <div className={styles.toggleRow}>
-              <span className={styles.toggleLabel}>Sold</span>
+              <span className={styles.toggleLabel}>Vendido?</span>
 
               <label className={styles.switch}>
                 <input type="checkbox" {...register('sold')} />
@@ -132,12 +159,12 @@ export const AddProductModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="productyear">Year</label>
+            <label htmlFor="productyear">Ano</label>
             <input id="productyear" type="text" {...register('productYear')} />
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="value">Value</label>
+            <label htmlFor="value">Valor</label>
             <input
               id="value"
               type="number"
@@ -152,7 +179,7 @@ export const AddProductModal = ({
               onClick={onClose}
               className={styles.cancelButton}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"

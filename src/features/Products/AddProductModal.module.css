@@ -38,12 +38,15 @@
 }
 
 .formGroup input,
-.formGroup textarea {
+.formGroup textarea,
+.formGroup select {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid black;
   border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
+  background-color: white;
 }
 
 .error {

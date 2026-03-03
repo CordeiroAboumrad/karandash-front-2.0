@@ -24,6 +24,7 @@ export interface Product {
   productYear: string
   measurements: string
   sold: boolean
+  artistId?: number
 }
 
 export interface User {
