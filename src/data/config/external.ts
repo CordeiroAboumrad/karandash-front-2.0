@@ -16,12 +16,8 @@ export const fetchConfig = async () => {
     console.log("Usando configuração local...");
     loadLocalConfig();
   } else {
-    try {
-      const response = await axios.get("/config.json");
-      APP_EXTERNAL.BACKEND_URL = response.data.APP_EXTERNAL_BACKEND_CONFIG;
-      APP_EXTERNAL.LOADED = true;
-    } catch (error) {
-      console.log(error);
-    }
+    APP_EXTERNAL.BACKEND_URL =
+      import.meta.env.VITE_APP_EXTERNAL_BACKEND_CONFIG;
+    APP_EXTERNAL.LOADED = true;
   }
 };

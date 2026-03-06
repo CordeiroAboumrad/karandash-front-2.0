@@ -24,6 +24,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_APP_EXTERNAL_BACKEND_CONFIG: ${{ secrets.APP_EXTERNAL_BACKEND_CONFIG }}
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
