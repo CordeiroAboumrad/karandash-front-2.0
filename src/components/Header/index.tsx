@@ -1,4 +1,5 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { isSuperUser } from '../../data/auth/roles'
 import { RegularRoutes } from '../../router/routes'
 import styles from './Header.module.css'
@@ -7,6 +8,11 @@ export const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const canManageUsers = isSuperUser()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname])
 
   const handleLogout = () => {
     localStorage.removeItem('bearerToken')
@@ -16,10 +22,20 @@ export const Header = () => {
 
   return (
     <header className={styles.kHeader}>
-      <div className={styles.headerTitle}>
-        Sistema de Gerenciamento Karandash
-      </div>
-      <nav className={styles.nav}>
+      <div className={styles.headerTitle}>Sistema de Gerenciamento Karandash</div>
+      <button
+        type="button"
+        className={styles.menuToggle}
+        onClick={() => setIsMenuOpen((prev) => !prev)}
+        aria-expanded={isMenuOpen}
+        aria-controls="main-navigation"
+      >
+        Menu
+      </button>
+      <nav
+        id="main-navigation"
+        className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''}`}
+      >
         <Link
           to={RegularRoutes.ARTISTS}
           className={`${styles.navLink} ${

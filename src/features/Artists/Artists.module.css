@@ -242,3 +242,45 @@
   align-items: center;
   height: 200px;
 }
+
+@media (max-width: 1200px) {
+  .artistsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .artistsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .artists {
+    padding: 1rem;
+  }
+
+  .artistsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .artistInfo strong {
+    min-width: 95px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .editButton,
+  .deleteButton {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .modalHeader,
+  .modalBody {
+    padding: 1rem;
+  }
+}

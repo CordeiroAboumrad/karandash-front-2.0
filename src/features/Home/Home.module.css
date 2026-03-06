@@ -62,3 +62,29 @@
 .addButton:hover {
   background-color: #333;
 }
+
+@media (max-width: 1024px) {
+  .sectionsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home {
+    padding: 1rem;
+  }
+
+  .home h1 {
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+  }
+
+  .sectionsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+}

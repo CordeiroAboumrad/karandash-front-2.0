@@ -1,7 +1,7 @@
 .products {
   padding: 1rem;
-  width: 95%;
-  max-width: 99%;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
 }
 
@@ -374,4 +374,66 @@
   border-radius: 4px;
   background-color: white;
   cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .searchContainer {
+    flex-direction: column;
+  }
+
+  .searchInput,
+  .searchSelect,
+  .searchButton,
+  .clearButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .productCard {
+    padding: 1rem;
+    min-height: 0;
+  }
+
+  .productInfo strong {
+    min-width: 72px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .detailsButton,
+  .editButton,
+  .deleteButton,
+  .pdfButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .paginationControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sizeSelector {
+    width: 100%;
+    justify-content: space-between;
+  }
 }

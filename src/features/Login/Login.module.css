@@ -73,7 +73,7 @@
 .logoContainer {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin: 2rem;
 }
 
 .credentialsTrigger {
@@ -127,4 +127,25 @@
   margin-top: 0.75rem;
   color: #b00020;
   text-align: center;
+}
+
+@media (max-width: 560px) {
+  .loginContainer {
+    padding: 1rem;
+  }
+
+  .loginBox {
+    padding: 1rem;
+  }
+
+  .formGroup,
+  .errorMessage,
+  .modalActions {
+    width: 100%;
+  }
+
+  .loginButton,
+  .secondaryButton {
+    width: 100%;
+  }
 }
