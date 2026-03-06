@@ -80,11 +80,6 @@ export const deleteCustomer = async (customerId: number) => {
   return res.data
 }
 
-export const getCustomer = async (id: string) => {
-  const res = await karandashClient.get(`/customers/${id}`)
-  return res.data
-}
-
 export const getAllCustomers = async (): Promise<CustomersSchema> => {
   const res = await karandashClient.get('/customers')
   return res.data

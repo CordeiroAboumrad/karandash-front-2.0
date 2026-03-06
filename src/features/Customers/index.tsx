@@ -28,7 +28,7 @@ export const Customers = () => {
 
   const handleDeleteCustomer = async (customer: CustomerSchema) => {
     const shouldDelete = window.confirm(
-      `Excluir cliente "${customer.name}"? Esta ação não pode ser desfeita.`
+      `Excluir cliente "${customer.name}"? Esta aï¿½ï¿½o nï¿½o pode ser desfeita.`
     )
 
     if (!shouldDelete) {
@@ -91,11 +91,11 @@ export const Customers = () => {
                         <button
                           onClick={() => setAddressModal(customer.address || '')}
                           className={styles.magnifierButton}
-                          title="Ver endereço completo"
+                          title="Ver endereÃ§o completo"
                         >
                           <i className="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <strong>Endereço:</strong>
+                        <strong>EndereÃ§o:</strong>
                       </div>
                     </div>
                     <p className={styles.addressText}>{customer.address}</p>
@@ -138,7 +138,7 @@ export const Customers = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h3>Endereço Completo</h3>
+              <h3>EndereÃ§o Completo</h3>
               <button
                 onClick={() => setAddressModal(null)}
                 className={styles.closeButton}

@@ -36,22 +36,17 @@ export const ArtistsResultSchema = z.array(ArtistSchema.optional())
 
 export type ArtistsSchema = z.infer<typeof ArtistsResultSchema>
 
-export const CustomersResultSchema = z.array(
-  z.object({
-    name: z.string(),
-    address: z.string(),
-    email: z.string(),
-    createdat: z.string(),
-  })
-)
+export const CustomerResultSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  address: z.string(),
+  email: z.string(),
+  createdat: z.string(),
+})
 
-export type CustomerSchema = {
-  id: number
-  name: string
-  address: string
-  email: string
-  createdat: string
-}
+export type CustomerSchema = z.infer<typeof CustomerResultSchema>
+
+export const CustomersResultSchema = z.array(CustomerResultSchema)
 
 export type CustomersSchema = z.infer<typeof CustomersResultSchema>
 
