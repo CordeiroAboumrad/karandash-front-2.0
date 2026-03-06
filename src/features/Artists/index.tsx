@@ -82,19 +82,19 @@ export const Artists = () => {
             {artistsQuery.data.map((artist, index) => (
               <div key={index} className={styles.artistCard}>
                 <div className={styles.cardContent}>
-                  <h3>{artist?.name}</h3>
+                  <h3>{artist.name}</h3>
                   <div className={styles.artistInfo}>
                     <p>
-                      <strong>Data de Nascimento:</strong> {artist?.dateofbirth}
+                      <strong>Data de Nascimento:</strong> {artist.dateofbirth}
                     </p>
                     <p>
                       <strong>Local de Nascimento:</strong>{' '}
-                      {artist?.placeofbirth}
+                      {artist.placeofbirth}
                     </p>
                     <div className={styles.historyContainer}>
                       <div className={styles.historyHeader}>
                         <button
-                          onClick={() => setHistoryModal(artist?.history || '')}
+                          onClick={() => setHistoryModal(artist.history || '')}
                           className={styles.magnifierButton}
                           title="Ver história completa"
                         >
@@ -103,7 +103,7 @@ export const Artists = () => {
                         <strong>História:</strong>
                       </div>
                     </div>
-                    <p className={styles.historyText}>{artist?.history}</p>
+                    <p className={styles.historyText}>{artist.history}</p>
                   </div>
                 </div>
                 <div className={styles.buttonGroup}>
@@ -160,3 +160,4 @@ export const Artists = () => {
     </div>
   )
 }
+

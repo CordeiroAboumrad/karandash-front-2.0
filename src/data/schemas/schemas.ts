@@ -32,7 +32,7 @@ export const ArtistSchema = z.object({
 
 export type ArtistSchema = z.infer<typeof ArtistSchema>
 
-export const ArtistsResultSchema = z.array(ArtistSchema.optional())
+export const ArtistsResultSchema = z.array(ArtistSchema)
 
 export type ArtistsSchema = z.infer<typeof ArtistsResultSchema>
 
