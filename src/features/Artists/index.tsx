@@ -3,6 +3,7 @@ import { useGetArtistsQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
 import { AddArtistModal } from './AddArtistModal'
 import { ArtistSchema } from '../../data/schemas/schemas'
+import { deleteArtist } from '../../data/apis/requests'
 import styles from './Artists.module.css'
 
 export const Artists = () => {
@@ -12,6 +13,9 @@ export const Artists = () => {
     undefined
   )
   const [historyModal, setHistoryModal] = useState<string | null>(null)
+  const [isDeletingArtistId, setIsDeletingArtistId] = useState<number | null>(
+    null
+  )
 
   const handleSuccess = () => {
     artistsQuery.refetch()
@@ -20,6 +24,27 @@ export const Artists = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setEditArtist(undefined)
+  }
+
+  const handleDeleteArtist = async (artist: ArtistSchema) => {
+    const shouldDelete = window.confirm(
+      `Excluir artista "${artist.name}"? Esta ação não pode ser desfeita.`
+    )
+
+    if (!shouldDelete) {
+      return
+    }
+
+    setIsDeletingArtistId(artist.id)
+    try {
+      await deleteArtist(artist.id)
+      await artistsQuery.refetch()
+    } catch (error) {
+      console.error(error)
+      alert('Houve um problema ao excluir o artista.')
+    } finally {
+      setIsDeletingArtistId(null)
+    }
   }
 
   return (
@@ -81,15 +106,24 @@ export const Artists = () => {
                     <p className={styles.historyText}>{artist?.history}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setEditArtist(artist)
-                    setIsModalOpen(true)
-                  }}
-                  className={styles.editButton}
-                >
-                  <i className="fa-solid fa-pen"></i> Editar
-                </button>
+                <div className={styles.buttonGroup}>
+                  <button
+                    onClick={() => {
+                      setEditArtist(artist)
+                      setIsModalOpen(true)
+                    }}
+                    className={styles.editButton}
+                  >
+                    <i className="fa-solid fa-pen"></i> Editar
+                  </button>
+                  <button
+                    onClick={() => handleDeleteArtist(artist)}
+                    className={styles.deleteButton}
+                    disabled={isDeletingArtistId === artist.id}
+                  >
+                    <i className="fa-solid fa-trash"></i> Excluir
+                  </button>
+                </div>
               </div>
             ))}
           </div>

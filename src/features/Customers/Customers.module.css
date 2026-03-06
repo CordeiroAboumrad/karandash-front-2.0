@@ -122,8 +122,8 @@
 }
 
 .editButton {
-  width: 100%;
-  margin-top: 1rem;
+  flex: 1;
+  min-width: 120px;
   padding: 0.5rem 1rem;
   background-color: white;
   color: black;
@@ -139,6 +139,38 @@
 
 .editButton:hover {
   background-color: #f0f0f0;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.deleteButton {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.5rem 1rem;
+  background-color: #cc0000;
+  color: white;
+  border: 1px solid #cc0000;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.deleteButton:hover {
+  background-color: #aa0000;
+}
+
+.deleteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .modal {

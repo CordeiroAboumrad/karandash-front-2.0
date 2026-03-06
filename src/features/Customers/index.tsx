@@ -3,13 +3,19 @@ import { useGetCustomersQuery } from '../../data/queries/karandashQueries'
 import { Oval } from 'react-loader-spinner'
 import { AddCustomerModal } from './AddCustomerModal'
 import { CustomerSchema } from '../../data/schemas/schemas'
+import { deleteCustomer } from '../../data/apis/requests'
 import styles from './Customers.module.css'
 
 export const Customers = () => {
   const customersQuery = useGetCustomersQuery()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editCustomer, setEditCustomer] = useState<CustomerSchema | undefined>(undefined)
+  const [editCustomer, setEditCustomer] = useState<CustomerSchema | undefined>(
+    undefined
+  )
   const [addressModal, setAddressModal] = useState<string | null>(null)
+  const [isDeletingCustomerId, setIsDeletingCustomerId] = useState<
+    number | null
+  >(null)
 
   const handleSuccess = () => {
     customersQuery.refetch()
@@ -18,6 +24,27 @@ export const Customers = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setEditCustomer(undefined)
+  }
+
+  const handleDeleteCustomer = async (customer: CustomerSchema) => {
+    const shouldDelete = window.confirm(
+      `Excluir cliente "${customer.name}"? Esta ação não pode ser desfeita.`
+    )
+
+    if (!shouldDelete) {
+      return
+    }
+
+    setIsDeletingCustomerId(customer.id)
+    try {
+      await deleteCustomer(customer.id)
+      await customersQuery.refetch()
+    } catch (error) {
+      console.error(error)
+      alert('Houve um problema ao excluir o cliente.')
+    } finally {
+      setIsDeletingCustomerId(null)
+    }
   }
 
   return (
@@ -64,25 +91,34 @@ export const Customers = () => {
                         <button
                           onClick={() => setAddressModal(customer.address || '')}
                           className={styles.magnifierButton}
-                          title="Ver endereÃ§o completo"
+                          title="Ver endereço completo"
                         >
                           <i className="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <strong>EndereÃ§o:</strong>
+                        <strong>Endereço:</strong>
                       </div>
                     </div>
                     <p className={styles.addressText}>{customer.address}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setEditCustomer(customer)
-                    setIsModalOpen(true)
-                  }}
-                  className={styles.editButton}
-                >
-                  <i className="fa-solid fa-pen"></i> Editar
-                </button>
+                <div className={styles.buttonGroup}>
+                  <button
+                    onClick={() => {
+                      setEditCustomer(customer)
+                      setIsModalOpen(true)
+                    }}
+                    className={styles.editButton}
+                  >
+                    <i className="fa-solid fa-pen"></i> Editar
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCustomer(customer)}
+                    className={styles.deleteButton}
+                    disabled={isDeletingCustomerId === customer.id}
+                  >
+                    <i className="fa-solid fa-trash"></i> Excluir
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -97,10 +133,16 @@ export const Customers = () => {
 
       {addressModal && (
         <div className={styles.modal} onClick={() => setAddressModal(null)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
-              <h3>EndereÃ§o Completo</h3>
-              <button onClick={() => setAddressModal(null)} className={styles.closeButton}>
+              <h3>Endereço Completo</h3>
+              <button
+                onClick={() => setAddressModal(null)}
+                className={styles.closeButton}
+              >
                 <i className="fa-solid fa-xmark"></i>
               </button>
             </div>

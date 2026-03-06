@@ -54,6 +54,11 @@ export const adjustArtist = async (artistID: number, artistData: Artist) => {
   return res.data
 }
 
+export const deleteArtist = async (artistId: number) => {
+  const res = await karandashClient.delete(`/artists/${artistId}`)
+  return res.data
+}
+
 export const registerCustomer = async (customerData: Customer) => {
   const res = await karandashClient.post(
     '/customer/input-customer',
@@ -66,7 +71,12 @@ export const updateCustomer = async (
   customerId: number,
   customerData: Customer
 ) => {
-  const res = await karandashClient.put(`/customer/${customerId}`, customerData)
+  const res = await karandashClient.put(`/customers/${customerId}`, customerData)
+  return res.data
+}
+
+export const deleteCustomer = async (customerId: number) => {
+  const res = await karandashClient.delete(`/customers/${customerId}`)
   return res.data
 }
 
