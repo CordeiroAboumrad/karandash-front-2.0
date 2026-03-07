@@ -271,6 +271,9 @@ export const Products = () => {
                         {product.description}
                       </p>
                       <p>
+                        <strong>Artista:</strong> {product.artists?.name || 'Desconhecido'}
+                      </p>
+                      <p>
                         <strong>Empresa:</strong> {product.company}
                       </p>
                       <p>

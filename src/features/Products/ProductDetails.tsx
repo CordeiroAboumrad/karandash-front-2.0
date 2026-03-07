@@ -189,7 +189,7 @@ export const ProductDetails = () => {
           <div className={styles.modal}>
             <h3>Confirm Upload</h3>
             <p>
-              Are you sure you want to upload {selectedFiles.length} file(s)?
+              Tem certeza de que gostaria de realizar o upload de {selectedFiles.length} arquivo(s)?
             </p>
             <div className={styles.fileList}>
               {selectedFiles.map((file, i) => (
