@@ -154,8 +154,8 @@ export const Products = () => {
       company: relatorioProduct.company,
       type: relatorioProduct.type,
       status: relatorioProduct.status,
-      technique: relatorioProduct.artTechnique,
-      year: relatorioProduct.productYear,
+      technique: relatorioProduct.arttechnique,
+      year: relatorioProduct.productyear,
       value: relatorioProduct.value,
       imageUrl: selectedRelatorioImage,
       addedAt: new Date().toISOString(),
@@ -280,10 +280,10 @@ export const Products = () => {
                         <strong>Status:</strong> {product.status}
                       </p>
                       <p>
-                        <strong>Técnica:</strong> {product.artTechnique}
+                        <strong>Técnica:</strong> {product.arttechnique}
                       </p>
                       <p>
-                        <strong>Ano:</strong> {product.productYear}
+                        <strong>Ano:</strong> {product.productyear}
                       </p>
                       <p>
                         <strong>Valor:</strong> {formatCurrency(Number(product.value))}
