@@ -188,14 +188,14 @@ export const Products = () => {
         />
         <input
           type="number"
-          placeholder="Preco Minimo"
+          placeholder="Preço Mínimo"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className={styles.searchInput}
         />
         <input
           type="number"
-          placeholder="Preco Maximo"
+          placeholder="Preço Máximo"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className={styles.searchInput}
@@ -272,9 +272,6 @@ export const Products = () => {
                       </p>
                       <p>
                         <strong>Artista:</strong> {product.artists?.name || 'Desconhecido'}
-                      </p>
-                      <p>
-                        <strong>Empresa:</strong> {product.company}
                       </p>
                       <p>
                         <strong>Tipo:</strong> {product.type}
