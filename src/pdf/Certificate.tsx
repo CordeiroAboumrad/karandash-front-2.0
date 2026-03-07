@@ -62,14 +62,12 @@ export function Certificate({
 
         <View style={styles.signatures}>
           <Text style={styles.signature}>
-            Dalton Costa Neves - Socio Gerente{'
-'}
+            Dalton Costa Neves - Socio Gerente{' '}
             CPF: 081.511.991-72
           </Text>
 
           <Text style={styles.signature}>
-            Maria Amelia Vieira Soares Costa Neves - Socia Gerente{'
-'}
+            Maria Amelia Vieira Soares Costa Neves - Socia Gerente{' '}
             CPF: 227.812.854-04
           </Text>
         </View>
