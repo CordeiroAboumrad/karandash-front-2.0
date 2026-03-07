@@ -38,42 +38,37 @@ export const Header = () => {
       >
         <Link
           to={RegularRoutes.ARTISTS}
-          className={`${styles.navLink} ${
-            location.pathname === RegularRoutes.ARTISTS ? styles.active : ''
-          }`}
+          className={`${styles.navLink} ${location.pathname === RegularRoutes.ARTISTS ? styles.active : ''
+            }`}
         >
           Artistas
         </Link>
         <Link
           to={RegularRoutes.CUSTOMERS}
-          className={`${styles.navLink} ${
-            location.pathname === RegularRoutes.CUSTOMERS ? styles.active : ''
-          }`}
+          className={`${styles.navLink} ${location.pathname === RegularRoutes.CUSTOMERS ? styles.active : ''
+            }`}
         >
           Clientes
         </Link>
         <Link
           to={RegularRoutes.PRODUCTS}
-          className={`${styles.navLink} ${
-            location.pathname === RegularRoutes.PRODUCTS ? styles.active : ''
-          }`}
+          className={`${styles.navLink} ${location.pathname === RegularRoutes.PRODUCTS ? styles.active : ''
+            }`}
         >
           Produtos
         </Link>
         <Link
           to={RegularRoutes.REPORTS}
-          className={`${styles.navLink} ${
-            location.pathname === RegularRoutes.REPORTS ? styles.active : ''
-          }`}
+          className={`${styles.navLink} ${location.pathname === RegularRoutes.REPORTS ? styles.active : ''
+            }`}
         >
-          Relatorios
+          Relatórios
         </Link>
         {canManageUsers && (
           <Link
             to={RegularRoutes.USERS}
-            className={`${styles.navLink} ${
-              location.pathname === RegularRoutes.USERS ? styles.active : ''
-            }`}
+            className={`${styles.navLink} ${location.pathname === RegularRoutes.USERS ? styles.active : ''
+              }`}
           >
             Usuários
           </Link>

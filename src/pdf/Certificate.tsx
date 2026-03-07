@@ -13,7 +13,7 @@ type CertificateProps = {
   year: number
   technique: string
   artist: string
-  artistGender?: 'masculino' | 'feminino' | null
+  artistGender?: 'masculino' | 'feminino' | undefined
 }
 
 export function Certificate({
@@ -32,7 +32,7 @@ export function Certificate({
       ? `autoria do artista ${artist}`
       : artistGender === 'feminino'
         ? `autoria da artista ${artist}`
-        : 'autoria de artista desconhecido'
+        : 'autoria anônima'
 
   return (
     <Document>
@@ -46,8 +46,8 @@ export function Certificate({
         <Text style={styles.title}>CERTIFICADO DE AUTENTICIDADE</Text>
 
         <Text style={styles.paragraph}>
-          Certificamos que a obra "{title}", medindo {dimensions}, ano de criacao {year}, tecnica {technique},
-          adquirida na Karandash Arte Contemporanea LTDA, CNPJ: 09.342.353/0001-44, e uma peca unica e autentica
+          Certificamos que a obra "{title}", medindo {dimensions}, ano de criação {year}, técnica {technique},
+          adquirida na Karandash Arte Contemporânea LTDA, CNPJ: 09.342.353/0001-44, é uma peça {!artistGender ? '' : 'única e autêntica'}
           de {autoriaTexto}.
         </Text>
 

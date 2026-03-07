@@ -64,7 +64,7 @@ export const AddCustomerModal = ({
         <h2>{editData ? 'Edit Customer' : 'Add New Customer'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
-            <label htmlFor="name">Name *</label>
+            <label htmlFor="name">Nome*</label>
             <input
               id="name"
               type="text"
@@ -83,7 +83,7 @@ export const AddCustomerModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Endereço</label>
             <textarea id="address" rows={3} {...register('address')} />
           </div>
 
@@ -93,7 +93,7 @@ export const AddCustomerModal = ({
               onClick={onClose}
               className={styles.cancelButton}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
@@ -108,9 +108,9 @@ export const AddCustomerModal = ({
                   secondaryColor="#fff"
                 />
               ) : editData ? (
-                'Atualizar Cliente'
+                'Atualizar'
               ) : (
-                '+ Cliente'
+                'Adicionar'
               )}
             </button>
           </div>

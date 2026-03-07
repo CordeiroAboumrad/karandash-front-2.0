@@ -238,7 +238,7 @@ export const Products = () => {
         </div>
       )}
       {!isLoading && products?.content?.length === 0 && (
-        <p>No products found.</p>
+        <p>Nenhum produto encontrado.</p>
       )}
       {!isLoading && products?.content && products.content.length > 0 && (
         <>
@@ -416,8 +416,8 @@ export const Products = () => {
                       key={`${image.id}-${image.mediadisplayposition}`}
                       type="button"
                       className={`${styles.imagePickerCard} ${selectedRelatorioImage === image.mediaurl
-                          ? styles.imagePickerCardSelected
-                          : ''
+                        ? styles.imagePickerCardSelected
+                        : ''
                         }`}
                       onClick={() => setSelectedRelatorioImage(image.mediaurl)}
                     >

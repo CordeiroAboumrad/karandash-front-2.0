@@ -279,7 +279,7 @@ export const Users = () => {
             <form onSubmit={handleSave} className={styles.form}>
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">Primeiro Nome</label>
                   <input
                     id="firstName"
                     value={form.firstName}
@@ -293,7 +293,7 @@ export const Users = () => {
                   />
                 </div>
                 <div className={styles.formGroup}>
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">Último Nome</label>
                   <input
                     id="lastName"
                     value={form.lastName}
@@ -319,7 +319,7 @@ export const Users = () => {
                   />
                 </div>
                 <div className={styles.formGroup}>
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">Nome de Usuário</label>
                   <input
                     id="username"
                     value={form.username}
@@ -356,7 +356,7 @@ export const Users = () => {
                     }))
                   }
                 />
-                {editingUser ? 'Admin user' : 'Create as admin'}
+                {editingUser ? 'Usuário Admin' : 'Criar como Admin'}
               </label>
 
               <div className={styles.modalActions}>

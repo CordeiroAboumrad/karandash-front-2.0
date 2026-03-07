@@ -34,7 +34,7 @@ export const AddArtistModal = ({
       setValue(
         'gender',
         (editData?.gender as 'masculino' | 'feminino' | null | undefined) ??
-          undefined
+        undefined
       )
       setValue('dateOfBirth', editData?.dateofbirth)
       setValue('placeOfBirth', editData?.placeofbirth)
@@ -70,7 +70,7 @@ export const AddArtistModal = ({
         <h2>{editData ? 'Edit Artist' : 'Add New Artist'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
-            <label htmlFor="name">Name *</label>
+            <label htmlFor="name">Nome*</label>
             <input
               id="name"
               type="text"
@@ -94,7 +94,7 @@ export const AddArtistModal = ({
               defaultValue=""
             >
               <option value="" disabled>
-                Selecione um genero
+                Selecione um gênero
               </option>
               <option value="masculino">masculino</option>
               <option value="feminino">feminino</option>
@@ -105,7 +105,7 @@ export const AddArtistModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="placeofbirth">Place of Birth</label>
+            <label htmlFor="placeofbirth">Local de Nascimento</label>
             <input
               id="placeofbirth"
               type="text"
@@ -114,7 +114,7 @@ export const AddArtistModal = ({
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="history">History</label>
+            <label htmlFor="history">História</label>
             <textarea id="history" rows={4} {...register('history')} />
           </div>
 
@@ -124,7 +124,7 @@ export const AddArtistModal = ({
               onClick={onClose}
               className={styles.cancelButton}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
