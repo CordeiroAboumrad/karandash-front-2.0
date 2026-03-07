@@ -54,9 +54,9 @@ export const ProductsReport = ({ products }: ProductsReportProps) => {
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View style={styles.galleryInfo}>
-            <Text>Galeria Karandash de Arte Popular e Contemporanea</Text>
+            <Text>Galeria Karandash de Arte Popular e Contempôranea</Text>
             <Text>CNPJ: 09.342.353/0001-44</Text>
-            <Text>Ladeira dos Martirios, 89, Centro</Text>
+            <Text>Ladeira dos Martírios, 89, Centro</Text>
             <Text>CEP: 57020-095, Maceió - Alagoas</Text>
             <Text>Fone: (82) 98203-1709</Text>
             <Text>Email: mameliavs@hotmail.com</Text>
