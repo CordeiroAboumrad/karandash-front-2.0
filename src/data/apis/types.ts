@@ -3,6 +3,7 @@ export interface Artist {
   dateOfBirth: string
   placeOfBirth: string
   history: string
+  gender?: 'masculino' | 'feminino'
 }
 
 export interface Customer {

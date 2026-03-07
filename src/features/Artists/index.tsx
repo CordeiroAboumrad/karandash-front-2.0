@@ -85,6 +85,9 @@ export const Artists = () => {
                   <h3>{artist.name}</h3>
                   <div className={styles.artistInfo}>
                     <p>
+                      <strong>Genero:</strong> {artist.gender || '-'}
+                    </p>
+                    <p>
                       <strong>Data de Nascimento:</strong> {artist.dateofbirth}
                     </p>
                     <p>

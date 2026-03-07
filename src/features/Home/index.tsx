@@ -41,6 +41,16 @@ export const Home = () => {
           </button>
         </div>
 
+        <div className={styles.section}>
+          <h2>Relatorios</h2>
+          <button
+            onClick={() => navigate(RegularRoutes.REPORTS)}
+            className={styles.viewButton}
+          >
+            Ver Relatorios
+          </button>
+        </div>
+
         {canManageUsers && (
           <div className={styles.section}>
             <h2>Usuários</h2>

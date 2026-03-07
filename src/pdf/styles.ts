@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
   signature: {
     textAlign: 'center',
     fontSize: 10,
+    marginTop: 50,
   },
 
   footer: {
@@ -71,4 +72,23 @@ export const styles = StyleSheet.create({
     fontSize: 9,
     textAlign: 'center',
   },
+  totalRow: {
+  flexDirection: "row",
+  minHeight: 40
+},
+
+totalLabel: {
+  width: "80%",
+  textAlign: "right",
+  paddingRight: 10,
+  fontWeight: "bold",
+  borderRight: "1 solid #000"
+},
+
+totalValue: {
+  width: "20%",
+  textAlign: "center",
+  fontWeight: "bold"
+}
+
 });

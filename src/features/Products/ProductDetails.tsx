@@ -1,5 +1,5 @@
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
-import { useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -120,6 +120,21 @@ export const ProductDetails = () => {
     setShowPreviewModal(true)
   }
 
+  useEffect(() => {
+    if (!showPreviewModal) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowPreviewModal(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [showPreviewModal])
+
   if (productQuery.isFetching) {
     return (
       <div className={styles.loader}>
@@ -206,17 +221,17 @@ export const ProductDetails = () => {
 
         <div className={styles.detailsGrid}>
           <div className={styles.detailItem}>
-            <strong>Description:</strong>
+            <strong>Descrição:</strong>
             <span>{product.description}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Company:</strong>
+            <strong>Empresa:</strong>
             <span>{product.company}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Type:</strong>
+            <strong>Tipo:</strong>
             <span>{product.type}</span>
           </div>
 
@@ -226,52 +241,52 @@ export const ProductDetails = () => {
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Keywords:</strong>
+            <strong>Palavras-chave:</strong>
             <span>{product.keywords}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Artist:</strong>
+            <strong>Artista:</strong>
             <span>{product.artists?.name || 'Unknown'}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Art Technique:</strong>
+            <strong>Técnica Artística:</strong>
             <span>{product.arttechnique}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Acquisition Cost:</strong>
+            <strong>Custo de Aquisição:</strong>
             <span>${product.acquisitioncost}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Value:</strong>
+            <strong>Valor:</strong>
             <span>${product.value}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Year:</strong>
+            <strong>Ano:</strong>
             <span>{product.productyear}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Measurements:</strong>
+            <strong>Medidas:</strong>
             <span>{product.measurements}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Sold:</strong>
+            <strong>Vendido?</strong>
             <span>{product.sold ? 'Yes' : 'No'}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Created At:</strong>
+            <strong>Criado em:</strong>
             <span>{new Date(product.createdat).toLocaleDateString()}</span>
           </div>
 
           <div className={styles.detailItem}>
-            <strong>Updated At:</strong>
+            <strong>Atualizado em:</strong>
             <span>{new Date(product.updatedat).toLocaleDateString()}</span>
           </div>
         </div>
@@ -280,43 +295,21 @@ export const ProductDetails = () => {
           <button
             onClick={handlePreviewClick}
             className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
+            title={
+              !imageBase64
+                ? 'Selecione uma imagem primeiro para visualizar o certificado.'
+                : undefined
+            }
           >
-            Preview Certificate
+            Preview do Certificado
           </button>
-          <PDFDownloadLink
-            key={`${imageBase64}-${imageWidth}-${imageHeight}`}
-            document={
-              <Certificate
-                artworkImage={imageBase64}
-                imageWidth={imageWidth}
-                imageHeight={imageHeight}
-                title={product.title}
-                dimensions={product.measurements || 'N/A'}
-                year={parseInt(product.productyear) || 0}
-                technique={product.arttechnique}
-                artist={product.artists?.name || 'Unknown Artist'}
-              />
-            }
-            fileName={`certificate-${product.title}.pdf`}
-            className={`${styles.pdfButton} ${!imageBase64 ? styles.disabled : ''}`}
-            onClick={(e) => {
-              if (!imageBase64) {
-                e.preventDefault()
-                toast.error('Please select one image for the certificate')
-              }
-            }}
-          >
-            {({ loading }) =>
-              loading ? 'Generating...' : 'Download Certificate'
-            }
-          </PDFDownloadLink>
         </div>
 
         {imagesQuery.data && imagesQuery.data.length > 0 && (
           <div className={styles.imagesSection}>
-            <h2>Product Images</h2>
+            <h2>Imagens do Produto</h2>
             <p className={styles.imageInstruction}>
-              Click on an image to select it for the certificate
+              Selecione uma imagem para o certificado
             </p>
             <div className={styles.imagesGrid}>
               {imagesQuery.data.map((img: any) => (
@@ -396,6 +389,7 @@ export const ProductDetails = () => {
                 year={parseInt(product.productyear) || 0}
                 technique={product.arttechnique}
                 artist={product.artists?.name || 'Unknown Artist'}
+                artistGender={product.artists?.gender}
               />
             </PDFViewer>
           </div>

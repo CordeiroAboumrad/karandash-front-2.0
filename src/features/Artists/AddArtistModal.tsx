@@ -31,6 +31,11 @@ export const AddArtistModal = ({
   useEffect(() => {
     if (editData) {
       setValue('artistName', editData?.name)
+      setValue(
+        'gender',
+        (editData?.gender as 'masculino' | 'feminino' | null | undefined) ??
+          undefined
+      )
       setValue('dateOfBirth', editData?.dateofbirth)
       setValue('placeOfBirth', editData?.placeofbirth)
       setValue('history', editData?.history)
@@ -79,6 +84,24 @@ export const AddArtistModal = ({
           <div className={styles.formGroup}>
             <label htmlFor="dateofbirth">Data de Nascimento</label>
             <input id="dateofbirth" type="date" {...register('dateOfBirth')} />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="gender">Genero</label>
+            <select
+              id="gender"
+              {...register('gender', { required: 'Genero is required' })}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Selecione um genero
+              </option>
+              <option value="masculino">masculino</option>
+              <option value="feminino">feminino</option>
+            </select>
+            {errors.gender && (
+              <span className={styles.error}>{errors.gender.message}</span>
+            )}
           </div>
 
           <div className={styles.formGroup}>

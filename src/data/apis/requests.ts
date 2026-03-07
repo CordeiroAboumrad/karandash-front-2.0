@@ -54,6 +54,17 @@ export const adjustArtist = async (artistID: number, artistData: Artist) => {
   return res.data
 }
 
+export const adjustArtistByName = async (
+  artistName: string,
+  artistData: Artist
+) => {
+  const res = await karandashClient.put(
+    `/artists/name/${encodeURIComponent(artistName)}`,
+    artistData
+  )
+  return res.data
+}
+
 export const deleteArtist = async (artistId: number) => {
   const res = await karandashClient.delete(`/artists/${artistId}`)
   return res.data

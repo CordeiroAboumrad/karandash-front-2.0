@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom'
-import { deleteProduct, searchProducts } from '../../data/apis/requests'
+import { deleteProduct, getProductImages, searchProducts } from '../../data/apis/requests'
 import { ProductSchema } from '../../data/schemas/schemas'
+import { addToRelatoriosList, useRelatoriosList } from '../Reports/relatoriosListStore'
+import { formatCurrency } from '../../utils/formatCurrency'
 import { AddProductModal } from './AddProductModal'
 import styles from './Products.module.css'
 
+type ProductImage = {
+  id: string | number
+  mediaurl: string
+  mediadisplayposition: number
+}
+
 export const Products = () => {
+  const relatoriosList = useRelatoriosList()
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(10)
   const [artist, setArtist] = useState('')
@@ -23,7 +33,19 @@ export const Products = () => {
     undefined
   )
   const [descriptionModal, setDescriptionModal] = useState<string | null>(null)
+  const [relatorioProduct, setRelatorioProduct] = useState<ProductSchema | null>(
+    null
+  )
+  const [relatorioImages, setRelatorioImages] = useState<ProductImage[]>([])
+  const [selectedRelatorioImage, setSelectedRelatorioImage] = useState<string | null>(
+    null
+  )
+  const [isRelatorioModalOpen, setIsRelatorioModalOpen] = useState(false)
+  const [isLoadingRelatorioImages, setIsLoadingRelatorioImages] = useState(false)
   const navigate = useNavigate()
+
+  const isProductInRelatorio = (productId: string) =>
+    relatoriosList.some((item) => item.productId === productId)
 
   const fetchProducts = async () => {
     setIsLoading(true)
@@ -87,10 +109,60 @@ export const Products = () => {
       await fetchProducts()
     } catch (error) {
       console.error(error)
-      alert('Could not delete product. Please try again.')
+      toast.error('Could not delete product. Please try again.')
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleOpenRelatorioModal = async (product: ProductSchema) => {
+    setRelatorioProduct(product)
+    setRelatorioImages([])
+    setSelectedRelatorioImage(null)
+    setIsRelatorioModalOpen(true)
+    setIsLoadingRelatorioImages(true)
+
+    try {
+      const data = await getProductImages(product.id)
+      setRelatorioImages(Array.isArray(data) ? data : [])
+    } catch (error) {
+      console.error(error)
+      toast.error('Nao foi possivel carregar as imagens do produto.')
+    } finally {
+      setIsLoadingRelatorioImages(false)
+    }
+  }
+
+  const handleCloseRelatorioModal = () => {
+    setIsRelatorioModalOpen(false)
+    setRelatorioProduct(null)
+    setRelatorioImages([])
+    setSelectedRelatorioImage(null)
+    setIsLoadingRelatorioImages(false)
+  }
+
+  const handleAddToRelatorio = () => {
+    if (!relatorioProduct || !selectedRelatorioImage) {
+      toast.error('Selecione uma unica imagem para adicionar ao relatorio.')
+      return
+    }
+
+    addToRelatoriosList({
+      productId: relatorioProduct.id,
+      title: relatorioProduct.title,
+      description: String(relatorioProduct.description ?? ''),
+      company: relatorioProduct.company,
+      type: relatorioProduct.type,
+      status: relatorioProduct.status,
+      technique: relatorioProduct.artTechnique,
+      year: relatorioProduct.productYear,
+      value: relatorioProduct.value,
+      imageUrl: selectedRelatorioImage,
+      addedAt: new Date().toISOString(),
+    })
+
+    toast.success('Produto adicionado ao relatorio com sucesso.')
+    handleCloseRelatorioModal()
   }
 
   return (
@@ -116,14 +188,14 @@ export const Products = () => {
         />
         <input
           type="number"
-          placeholder="Preço Mínimo"
+          placeholder="Preco Minimo"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className={styles.searchInput}
         />
         <input
           type="number"
-          placeholder="Preço Máximo"
+          placeholder="Preco Maximo"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className={styles.searchInput}
@@ -137,7 +209,7 @@ export const Products = () => {
         >
           <option value="all">Todos</option>
           <option value="sold">Vendidos</option>
-          <option value="notSold">Não Vendidos</option>
+          <option value="notSold">Nao Vendidos</option>
         </select>
         <button onClick={handleSearch} className={styles.searchButton}>
           Procurar
@@ -171,79 +243,90 @@ export const Products = () => {
       {!isLoading && products?.content && products.content.length > 0 && (
         <>
           <div className={styles.productsGrid}>
-            {products.content.map((product: ProductSchema, index: number) => (
-              <div key={index} className={styles.productCard}>
-                <div className={styles.cardContent}>
-                  <h3>{product.title}</h3>
-                  <div className={styles.productInfo}>
-                    <div className={styles.descriptionContainer}>
-                      <div className={styles.descriptionHeader}>
-                        <button
-                          onClick={() =>
-                            setDescriptionModal(
-                              product.description.toString() || ''
-                            )
-                          }
-                          className={styles.magnifierButton}
-                          title="Ver descrição completa"
-                        >
-                          <i className="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                        <strong>Description:</strong>
+            {products.content.map((product: ProductSchema, index: number) => {
+              const alreadyInRelatorio = isProductInRelatorio(product.id)
+
+              return (
+                <div key={index} className={styles.productCard}>
+                  <div className={styles.cardContent}>
+                    <h3>{product.title}</h3>
+                    <div className={styles.productInfo}>
+                      <div className={styles.descriptionContainer}>
+                        <div className={styles.descriptionHeader}>
+                          <button
+                            onClick={() =>
+                              setDescriptionModal(
+                                product.description.toString() || ''
+                              )
+                            }
+                            className={styles.magnifierButton}
+                            title="Ver descricao completa"
+                          >
+                            <i className="fa-solid fa-magnifying-glass"></i>
+                          </button>
+                          <strong>Descrição:</strong>
+                        </div>
                       </div>
+                      <p className={styles.descriptionText}>
+                        {product.description}
+                      </p>
+                      <p>
+                        <strong>Empresa:</strong> {product.company}
+                      </p>
+                      <p>
+                        <strong>Tipo:</strong> {product.type}
+                      </p>
+                      <p>
+                        <strong>Status:</strong> {product.status}
+                      </p>
+                      <p>
+                        <strong>Técnica:</strong> {product.artTechnique}
+                      </p>
+                      <p>
+                        <strong>Ano:</strong> {product.productYear}
+                      </p>
+                      <p>
+                        <strong>Valor:</strong> {formatCurrency(Number(product.value))}
+                      </p>
+                      <p>
+                        <strong>Vendido:</strong>{' '}
+                        {product.status == 'sold' ? 'Sim' : 'Não'}
+                      </p>
                     </div>
-                    <p className={styles.descriptionText}>
-                      {product.description}
-                    </p>
-                    <p>
-                      <strong>Company:</strong> {product.company}
-                    </p>
-                    <p>
-                      <strong>Type:</strong> {product.type}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {product.status}
-                    </p>
-                    <p>
-                      <strong>Technique:</strong> {product.artTechnique}
-                    </p>
-                    <p>
-                      <strong>Year:</strong> {product.productYear}
-                    </p>
-                    <p>
-                      <strong>Value:</strong> ${product.value}
-                    </p>
-                    <p>
-                      <strong>Sold:</strong>{' '}
-                      {product.status == 'sold' ? 'Yes' : 'No'}
-                    </p>
+                  </div>
+                  <div className={styles.buttonGroup}>
+                    <button
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      className={styles.detailsButton}
+                    >
+                      Ver Detalhes
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditProduct(product)
+                        setIsModalOpen(true)
+                      }}
+                      className={styles.editButton}
+                    >
+                      <i className="fa-solid fa-pen"></i> Editar
+                    </button>
+                    <button
+                      onClick={() => handleOpenRelatorioModal(product)}
+                      className={styles.reportButton}
+                      disabled={alreadyInRelatorio}
+                    >
+                      {alreadyInRelatorio ? 'Já no Relatorio' : '+ Relatorio'}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product)}
+                      className={styles.deleteButton}
+                    >
+                      <i className="fa-solid fa-trash"></i> Excluir
+                    </button>
                   </div>
                 </div>
-                <div className={styles.buttonGroup}>
-                  <button
-                    onClick={() => navigate(`/product/${product.id}`)}
-                    className={styles.detailsButton}
-                  >
-                    Ver Detalhes
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditProduct(product)
-                      setIsModalOpen(true)
-                    }}
-                    className={styles.editButton}
-                  >
-                    <i className="fa-solid fa-pen"></i> Editar
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(product)}
-                    className={styles.deleteButton}
-                  >
-                    <i className="fa-solid fa-trash"></i> Excluir
-                  </button>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <div className={styles.pagination}>
@@ -292,6 +375,83 @@ export const Products = () => {
         editData={editProduct}
       />
 
+      {isRelatorioModalOpen && (
+        <div className={styles.modal} onClick={handleCloseRelatorioModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h3>Selecionar imagem para Relatorio</h3>
+              <button
+                onClick={handleCloseRelatorioModal}
+                className={styles.closeButton}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              {isLoadingRelatorioImages && (
+                <div className={styles.loader}>
+                  <Oval
+                    height={32}
+                    width={32}
+                    color="#cc0000"
+                    secondaryColor="#cc0000"
+                  />
+                </div>
+              )}
+
+              {!isLoadingRelatorioImages && relatorioImages.length === 0 && (
+                <p className={styles.emptyImageMessage}>
+                  Este produto nao possui imagens associadas. Nao e possivel
+                  adicionar ao relatorio.
+                </p>
+              )}
+
+              {!isLoadingRelatorioImages && relatorioImages.length > 0 && (
+                <div className={styles.imagePickerGrid}>
+                  {relatorioImages.map((image) => (
+                    <button
+                      key={`${image.id}-${image.mediadisplayposition}`}
+                      type="button"
+                      className={`${styles.imagePickerCard} ${selectedRelatorioImage === image.mediaurl
+                          ? styles.imagePickerCardSelected
+                          : ''
+                        }`}
+                      onClick={() => setSelectedRelatorioImage(image.mediaurl)}
+                    >
+                      <img
+                        src={image.mediaurl}
+                        alt={`Imagem ${image.mediadisplayposition}`}
+                        className={styles.imagePickerImage}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.cancelModalButton}
+                onClick={handleCloseRelatorioModal}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className={styles.confirmModalButton}
+                onClick={handleAddToRelatorio}
+                disabled={!selectedRelatorioImage}
+              >
+                Adicionar ao Relatorio
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {descriptionModal && (
         <div className={styles.modal} onClick={() => setDescriptionModal(null)}>
           <div
@@ -299,7 +459,7 @@ export const Products = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h3>Descrição Completa</h3>
+              <h3>Descricao Completa</h3>
               <button
                 onClick={() => setDescriptionModal(null)}
                 className={styles.closeButton}

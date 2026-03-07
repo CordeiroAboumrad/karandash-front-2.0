@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, Image } from '@react-pdf/renderer'
+import { Document, Image, Page, Text, View } from '@react-pdf/renderer'
 
 import karandashLogo from '../assets/karandash.png'
 
@@ -13,6 +13,7 @@ type CertificateProps = {
   year: number
   technique: string
   artist: string
+  artistGender?: 'masculino' | 'feminino' | null
 }
 
 export function Certificate({
@@ -24,54 +25,58 @@ export function Certificate({
   year,
   technique,
   artist,
+  artistGender,
 }: CertificateProps) {
+  const autoriaTexto =
+    artistGender === 'masculino'
+      ? `autoria do artista ${artist}`
+      : artistGender === 'feminino'
+        ? `autoria da artista ${artist}`
+        : 'autoria de artista desconhecido'
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* HEADER */}
         <View style={styles.header}>
           <Image src={karandashLogo} style={styles.logo} />
-          <Text style={styles.company}>Karandash Arte Contemporânea LTDA</Text>
+          <Text style={styles.company}>Karandash Arte Contemporanea LTDA</Text>
           <Text style={styles.subtext}>CNPJ: 09.342.353/0001-44</Text>
         </View>
 
-        {/* TITLE */}
         <Text style={styles.title}>CERTIFICADO DE AUTENTICIDADE</Text>
 
-        {/* BODY TEXT */}
         <Text style={styles.paragraph}>
-          Certificamos que a obra “{title}”, medindo {dimensions}, ano de
-          criação {year}, técnica {technique}, adquirida na Karandash Arte
-          Contemporânea LTDA, CNPJ: 09.342.353/0001-44, é uma peça única e
-          autêntica de autoria do artista {artist}.
+          Certificamos que a obra "{title}", medindo {dimensions}, ano de criacao {year}, tecnica {technique},
+          adquirida na Karandash Arte Contemporanea LTDA, CNPJ: 09.342.353/0001-44, e uma peca unica e autentica
+          de {autoriaTexto}.
         </Text>
 
-        {/* ARTWORK IMAGE */}
         {artworkImage && (
           <View style={styles.artworkContainer}>
-            <Image src={artworkImage} style={{ width: imageWidth, height: imageHeight, objectFit: 'contain' }} />
+            <Image
+              src={artworkImage}
+              style={{ width: imageWidth, height: imageHeight, objectFit: 'contain' }}
+            />
           </View>
         )}
 
-        {/* SIGNATURES */}
         <View style={styles.signatures}>
           <Text style={styles.signature}>
-            Dalton Costa Neves – Sócio Gerente{'\n'}
+            Dalton Costa Neves - Socio Gerente{'
+'}
             CPF: 081.511.991-72
           </Text>
 
           <Text style={styles.signature}>
-            Maria Amelia Vieira Soares Costa Neves – Sócia Gerente{'\n'}
+            Maria Amelia Vieira Soares Costa Neves - Socia Gerente{'
+'}
             CPF: 227.812.854-04
           </Text>
         </View>
 
-        {/* FOOTER */}
         <View style={styles.footer}>
-          <Text>
-            Ladeira dos Martírios, 89, Centro – CEP: 57020-095, Maceió – Alagoas
-          </Text>
-          <Text>Fone: (82) 3317-6693 – (82) 982031709</Text>
+          <Text>Ladeira dos Martirios, 89, Centro - CEP: 57020-095, Maceio - Alagoas</Text>
+          <Text>Fone: (82) 3317-6693 - (82) 982031709</Text>
           <Text>E-mail: mameliavs@hotmail.com / contato@karandash.com.br</Text>
         </View>
       </Page>

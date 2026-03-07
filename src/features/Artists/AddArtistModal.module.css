@@ -38,6 +38,7 @@
 }
 
 .formGroup input,
+.formGroup select,
 .formGroup textarea {
   width: 100%;
   padding: 0.5rem;

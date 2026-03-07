@@ -23,6 +23,7 @@ export type UserCredentialRedefinition = z.input<
 export const ArtistSchema = z.object({
   id: z.number(),
   name: z.string(),
+  gender: z.enum(['masculino', 'feminino']).nullable().optional(),
   dateofbirth: z.string(),
   placeofbirth: z.string(),
   history: z.string(),

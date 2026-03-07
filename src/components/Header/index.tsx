@@ -60,6 +60,14 @@ export const Header = () => {
         >
           Produtos
         </Link>
+        <Link
+          to={RegularRoutes.REPORTS}
+          className={`${styles.navLink} ${
+            location.pathname === RegularRoutes.REPORTS ? styles.active : ''
+          }`}
+        >
+          Relatorios
+        </Link>
         {canManageUsers && (
           <Link
             to={RegularRoutes.USERS}
