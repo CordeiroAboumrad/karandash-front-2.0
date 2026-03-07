@@ -39,7 +39,7 @@ export function Certificate({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Image src={karandashLogo} style={styles.logo} />
-          <Text style={styles.company}>Karandash Arte Contemporanea LTDA</Text>
+          <Text style={styles.company}>Karandash Arte Contemporânea LTDA</Text>
           <Text style={styles.subtext}>CNPJ: 09.342.353/0001-44</Text>
         </View>
 
@@ -62,18 +62,18 @@ export function Certificate({
 
         <View style={styles.signatures}>
           <Text style={styles.signature}>
-            Dalton Costa Neves - Socio Gerente{' '}
+            Dalton Costa Neves - Sócio Gerente{' '}
             CPF: 081.511.991-72
           </Text>
 
           <Text style={styles.signature}>
-            Maria Amelia Vieira Soares Costa Neves - Socia Gerente{' '}
+            Maria Amelia Vieira Soares Costa Neves - Sócia Gerente{' '}
             CPF: 227.812.854-04
           </Text>
         </View>
 
         <View style={styles.footer}>
-          <Text>Ladeira dos Martirios, 89, Centro - CEP: 57020-095, Maceio - Alagoas</Text>
+          <Text>Ladeira dos Martírios, 89, Centro - CEP: 57020-095, Maceió - Alagoas</Text>
           <Text>Fone: (82) 3317-6693 - (82) 982031709</Text>
           <Text>E-mail: mameliavs@hotmail.com / contato@karandash.com.br</Text>
         </View>
