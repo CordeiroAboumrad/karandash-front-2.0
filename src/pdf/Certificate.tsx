@@ -10,7 +10,7 @@ type CertificateProps = {
   imageHeight?: number
   title: string
   dimensions: string
-  year: number
+  year?: number
   technique: string
   artist: string
   artistGender?: 'masculino' | 'feminino' | undefined

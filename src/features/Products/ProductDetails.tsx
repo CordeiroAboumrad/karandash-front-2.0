@@ -1,4 +1,4 @@
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
+import { PDFViewer } from '@react-pdf/renderer'
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
@@ -23,6 +23,8 @@ export const ProductDetails = () => {
   const [imageBase64, setImageBase64] = useState<string>('')
   const [imageWidth, setImageWidth] = useState(180)
   const [imageHeight, setImageHeight] = useState(180)
+  const isAndroidDevice =
+    typeof window !== 'undefined' && /Android/i.test(window.navigator.userAgent)
 
   const navigate = useNavigate()
   const productQuery = useGetProductByIdQuery(id || '')
@@ -118,8 +120,26 @@ export const ProductDetails = () => {
       toast.error('Please select one image for the certificate')
       return
     }
+    if (isAndroidDevice) {
+      toast('No Android, use o botao "Baixar Certificado".')
+      return
+    }
     setShowPreviewModal(true)
   }
+
+  const certificateDocument = product ? (
+    <Certificate
+      artworkImage={imageBase64}
+      imageWidth={imageWidth}
+      imageHeight={imageHeight}
+      title={product.title}
+      dimensions={product.measurements || 'N/A'}
+      year={parseInt(product.productyear) || 0}
+      technique={product.arttechnique}
+      artist={product.artists?.name || 'Unknown Artist'}
+      artistGender={product.artists?.gender}
+    />
+  ) : null
 
   useEffect(() => {
     if (!showPreviewModal) {
@@ -295,15 +315,29 @@ export const ProductDetails = () => {
         <div className={styles.certificateButtons}>
           <button
             onClick={handlePreviewClick}
-            className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
+            className={`${styles.previewButton} ${!imageBase64 || isAndroidDevice ? styles.disabled : ''}`}
             title={
               !imageBase64
                 ? 'Selecione uma imagem primeiro para visualizar o certificado.'
-                : undefined
+                : isAndroidDevice
+                  ? 'No Android, baixe o certificado.'
+                  : undefined
             }
+            disabled={!imageBase64 || isAndroidDevice}
           >
             Preview do Certificado
           </button>
+          {isAndroidDevice && (
+            <button
+              type="button"
+              className={`${styles.pdfButton} ${styles.disabled}`}
+              onClick={() =>
+                toast.error('Selecione uma imagem para baixar o certificado')
+              }
+            >
+              Baixar Certificado
+            </button>
+          )}
         </div>
 
         {imagesQuery.data && imagesQuery.data.length > 0 && (
@@ -377,22 +411,14 @@ export const ProductDetails = () => {
                 ×
               </button>
             </div>
-            <PDFViewer
-              className={styles.pdfViewer}
-              key={`${imageBase64}-${imageWidth}-${imageHeight}`}
-            >
-              <Certificate
-                artworkImage={imageBase64}
-                imageWidth={imageWidth}
-                imageHeight={imageHeight}
-                title={product.title}
-                dimensions={product.measurements || 'N/A'}
-                year={parseInt(product.productyear) || 0}
-                technique={product.arttechnique}
-                artist={product.artists?.name || 'Unknown Artist'}
-                artistGender={product.artists?.gender}
-              />
-            </PDFViewer>
+            {certificateDocument && (
+              <PDFViewer
+                className={styles.pdfViewer}
+                key={`${imageBase64}-${imageWidth}-${imageHeight}`}
+              >
+                {certificateDocument}
+              </PDFViewer>
+            )}
           </div>
         </div>
       )}
