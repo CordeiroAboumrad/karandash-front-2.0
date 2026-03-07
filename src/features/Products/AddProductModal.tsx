@@ -6,6 +6,7 @@ import { useGetArtistsQuery } from '../../data/queries/karandashQueries'
 import styles from './AddProductModal.module.css'
 import { Product } from '../../data/apis/types'
 import { ProductSchema } from '../../data/schemas/schemas'
+import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 
 interface AddProductModalProps {
   isOpen: boolean
@@ -21,6 +22,7 @@ export const AddProductModal = ({
   editData,
 }: AddProductModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  useLockBodyScroll(isOpen)
   const artistsQuery = useGetArtistsQuery()
   const {
     register,
@@ -37,8 +39,8 @@ export const AddProductModal = ({
       setValue('company', editData.company)
       setValue('type', editData.type)
       setValue('status', editData.status)
-      setValue('artTechnique', editData.artTechnique)
-      setValue('productYear', editData.productYear)
+      setValue('artTechnique', editData.arttechnique)
+      setValue('productYear', editData.productyear)
       setValue('value', editData.value)
       setValue('measurements', editData.measurements)
       setValue('sold', editData.sold)

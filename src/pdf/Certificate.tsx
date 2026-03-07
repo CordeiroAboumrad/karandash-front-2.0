@@ -46,7 +46,7 @@ export function Certificate({
         <Text style={styles.title}>CERTIFICADO DE AUTENTICIDADE</Text>
 
         <Text style={styles.paragraph}>
-          Certificamos que a obra "{title}", medindo {dimensions}, ano de criação {year}, técnica {technique},
+          Certificamos que a obra "{title}", medindo {dimensions}, {!year ? '' : `ano de criação ${year}, `}técnica {technique},
           adquirida na Karandash Arte Contemporânea LTDA, CNPJ: 09.342.353/0001-44, é uma peça {!artistGender ? '' : 'única e autêntica'}
           de {autoriaTexto}.
         </Text>

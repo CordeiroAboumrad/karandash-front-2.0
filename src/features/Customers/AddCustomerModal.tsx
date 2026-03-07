@@ -5,6 +5,7 @@ import { registerCustomer, updateCustomer } from '../../data/apis/requests'
 import styles from './AddCustomerModal.module.css'
 import { Customer } from '../../data/apis/types'
 import { CustomerSchema } from '../../data/schemas/schemas'
+import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 
 interface AddCustomerModalProps {
   isOpen: boolean
@@ -20,6 +21,7 @@ export const AddCustomerModal = ({
   editData,
 }: AddCustomerModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  useLockBodyScroll(isOpen)
   const {
     register,
     handleSubmit,

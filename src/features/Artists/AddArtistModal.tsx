@@ -5,6 +5,7 @@ import { createArtist, adjustArtist } from '../../data/apis/requests'
 import styles from './AddArtistModal.module.css'
 import { Artist } from '../../data/apis/types'
 import { ArtistSchema } from '../../data/schemas/schemas'
+import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 
 interface AddArtistModalProps {
   isOpen: boolean
@@ -20,6 +21,7 @@ export const AddArtistModal = ({
   editData,
 }: AddArtistModalProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  useLockBodyScroll(isOpen)
   const {
     register,
     handleSubmit,
