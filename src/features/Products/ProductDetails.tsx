@@ -10,6 +10,7 @@ import {
 import { saveProductImage, getImageAsBase64 } from '../../data/apis/requests'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
+import { formatCurrency } from '../../utils/formatCurrency'
 
 export const ProductDetails = () => {
   const { id } = useParams()
@@ -262,7 +263,7 @@ export const ProductDetails = () => {
 
           <div className={styles.detailItem}>
             <strong>Valor:</strong>
-            <span>${product.value}</span>
+            <span>{!product.value ? 'Não informado' : `$${formatCurrency(Number(product.value))}`}</span>
           </div>
 
           <div className={styles.detailItem}>

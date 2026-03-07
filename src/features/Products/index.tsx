@@ -286,7 +286,7 @@ export const Products = () => {
                         <strong>Ano:</strong> {product.productyear}
                       </p>
                       <p>
-                        <strong>Valor:</strong> {formatCurrency(Number(product.value))}
+                        <strong>Valor:</strong> {!product.value ? 'Não informado' : formatCurrency(Number(product.value))}
                       </p>
                       <p>
                         <strong>Vendido:</strong>{' '}
