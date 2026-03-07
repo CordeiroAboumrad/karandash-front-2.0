@@ -336,21 +336,21 @@ export const Products = () => {
                 disabled={page === 0}
                 className={styles.pageButton}
               >
-                Previous
+                Anterior
               </button>
               <span className={styles.pageInfo}>
-                Page {page + 1} of {products.totalPages}
+                Página {page + 1} de {products.totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= products.totalPages - 1}
                 className={styles.pageButton}
               >
-                Next
+                Próxima
               </button>
             </div>
             <div className={styles.sizeSelector}>
-              <label>Items per page:</label>
+              <label>Itens por página:</label>
               <select
                 value={size}
                 onChange={(e) => {
