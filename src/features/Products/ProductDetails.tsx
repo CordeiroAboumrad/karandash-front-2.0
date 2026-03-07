@@ -323,7 +323,7 @@ export const ProductDetails = () => {
                   ? 'No Android, baixe o certificado.'
                   : undefined
             }
-            disabled={!imageBase64 || isAndroidDevice}
+            disabled={!imageBase64}
           >
             Preview do Certificado
           </button>
