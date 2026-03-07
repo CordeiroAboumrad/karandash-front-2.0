@@ -38,12 +38,11 @@ export const styles = StyleSheet.create({
 
   paragraph: {
     textAlign: 'justify',
-    marginBottom: 25,
   },
 
   artworkContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 5,
   },
 
   artwork: {
@@ -53,20 +52,31 @@ export const styles = StyleSheet.create({
   },
 
   signatures: {
-    marginTop: 30,
     alignItems: 'center',
-    gap: 20,
+    gap: 5,
   },
 
-  signature: {
+  signature1: {
+    marginTop: 50,
+    textAlign: 'center',
+    fontSize: 10,
+  },
+
+  signature2: {
     textAlign: 'center',
     fontSize: 10,
     marginTop: 50,
   },
 
+  signatureCpf: {
+    textAlign: 'center',
+    fontSize: 8,
+    marginTop: 2,
+  },
+
   footer: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 30,
     left: 50,
     right: 50,
     fontSize: 9,
