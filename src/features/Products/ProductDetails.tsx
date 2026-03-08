@@ -40,14 +40,14 @@ export const ProductDetails = () => {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
     if (files.length > 5) {
-      toast.error('Maximum 5 images allowed at a time')
+      toast.error('Máximo de 5 itens permitidos ao mesmo tempo')
       e.target.value = ''
       return
     }
     const totalSize = files.reduce((sum, file) => sum + file.size, 0)
     const maxSize = 50 * 1024 * 1024
     if (totalSize > maxSize) {
-      toast.error('Total file size exceeds 50MB limit')
+      toast.error('Tamanho total de arquivos supera o limite de 50MB')
       e.target.value = ''
       return
     }
@@ -64,11 +64,11 @@ export const ProductDetails = () => {
     try {
       await saveProductImage(product.id, selectedFiles)
       await imagesQuery.refetch()
-      toast.success(`${selectedFiles.length} image(s) uploaded successfully`, {
+      toast.success(`${selectedFiles.length} ${selectedFiles.length === 1 ? 'imagem' : 'imagens'} carregadas com sucesso`, {
         icon: '✓',
       })
     } catch (error) {
-      toast.error('Failed to upload images')
+      toast.error('Falha ao realizar upload das imagens')
     } finally {
       setIsUploading(false)
       setSelectedFiles([])
@@ -110,14 +110,14 @@ export const ProductDetails = () => {
       const base64 = await getImageAsBase64(imageUrl)
       setImageBase64(base64)
     } catch (error) {
-      toast.error('Failed to load image')
+      toast.error('Falha ao carregar a imagem')
       setSelectedImageUrl('')
     }
   }
 
   const handlePreviewClick = () => {
     if (!imageBase64) {
-      toast.error('Please select one image for the certificate')
+      toast.error('Selecione uma imagem para visualizar o certificado')
       return
     }
     if (isAndroidDevice) {
@@ -159,7 +159,7 @@ export const ProductDetails = () => {
       dimensions={product.measurements || 'N/A'}
       year={parseInt(product.productyear) || 0}
       technique={product.arttechnique}
-      artist={product.artists?.name || 'Unknown Artist'}
+      artist={product.artists?.name}
       artistGender={product.artists?.gender}
     />
   ) : null
@@ -247,13 +247,13 @@ export const ProductDetails = () => {
                 onClick={handleCancelUpload}
                 className={styles.cancelButton}
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleConfirmUpload}
                 className={styles.confirmButton}
               >
-                Confirm
+                Confirmar
               </button>
             </div>
           </div>
@@ -291,7 +291,7 @@ export const ProductDetails = () => {
 
           <div className={styles.detailItem}>
             <strong>Artista:</strong>
-            <span>{product.artists?.name || 'Unknown'}</span>
+            <span>{product.artists?.name || 'Desconhecido'}</span>
           </div>
 
           <div className={styles.detailItem}>
@@ -331,7 +331,7 @@ export const ProductDetails = () => {
 
           <div className={styles.detailItem}>
             <strong>Atualizado em:</strong>
-            <span>{new Date(product.updatedat).toLocaleDateString()}</span>
+            <span>{product.updatedat ? new Date(product.updatedat).toLocaleDateString() : 'NA'}</span>
           </div>
         </div>
 
@@ -377,7 +377,7 @@ export const ProductDetails = () => {
                 >
                   <img
                     src={img.mediaurl}
-                    alt={`Product ${img.mediadisplayposition}`}
+                    alt={`Produto ${img.mediadisplayposition}`}
                   />
                   {selectedImageUrl === img.mediaurl && (
                     <div className={styles.selectedBadge}>✓</div>
@@ -408,7 +408,7 @@ export const ProductDetails = () => {
               </button>
               <div className={styles.sizeControls}>
                 <label>
-                  Width:
+                  Largura:
                   <input
                     type="number"
                     value={imageWidth}
@@ -417,7 +417,7 @@ export const ProductDetails = () => {
                   />
                 </label>
                 <label>
-                  Height:
+                  Altura:
                   <input
                     type="number"
                     value={imageHeight}
