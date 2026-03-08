@@ -92,6 +92,30 @@ export const moveRelatorioItem = (
   })
 }
 
+export const moveRelatorioItemToPosition = (
+  productId: string,
+  position: number
+) => {
+  relatoriosListAtom.set((current) => {
+    const index = current.findIndex((item) => item.productId === productId)
+    if (index < 0) {
+      return current
+    }
+
+    const clampedPosition = Math.max(1, Math.min(position, current.length))
+    const targetIndex = clampedPosition - 1
+
+    if (index === targetIndex) {
+      return current
+    }
+
+    const updated = [...current]
+    const [movedItem] = updated.splice(index, 1)
+    updated.splice(targetIndex, 0, movedItem)
+    return updated
+  })
+}
+
 export const clearRelatoriosList = () => {
   relatoriosListAtom.set([])
 }

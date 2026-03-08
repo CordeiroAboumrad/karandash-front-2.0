@@ -115,6 +115,7 @@
 .cardActions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
 }
@@ -138,6 +139,25 @@
 .orderButton:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+.positionControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.25rem;
+}
+
+.positionControl label {
+  font-size: 0.85rem;
+}
+
+.positionSelect {
+  min-width: 62px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+  padding: 0.25rem 0.35rem;
 }
 
 .modalOverlay {
@@ -202,9 +222,18 @@
 
 .sizeControlRow {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) auto auto;
+  grid-template-columns: 32px minmax(180px, 1fr) auto auto auto;
   gap: 0.75rem;
   align-items: center;
+}
+
+.sizeControlPosition {
+  text-align: center;
+  font-weight: 700;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  padding: 0.2rem 0.25rem;
+  background: #f7f7f7;
 }
 
 .sizeControlTitle {
@@ -219,6 +248,20 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.9rem;
+}
+
+.rotateButton {
+  border: 1px solid black;
+  border-radius: 4px;
+  background: white;
+  color: black;
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rotateButton:hover {
+  background: #f0f0f0;
 }
 
 .sizeInput {

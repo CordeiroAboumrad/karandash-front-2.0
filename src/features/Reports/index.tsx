@@ -8,6 +8,7 @@ import styles from './Reports.module.css'
 import {
   clearRelatoriosList,
   moveRelatorioItem,
+  moveRelatorioItemToPosition,
   removeFromRelatoriosList,
   useRelatoriosList,
 } from './relatoriosListStore'
@@ -21,6 +22,9 @@ export const Reports = () => {
   const [imageSizeByProduct, setImageSizeByProduct] = useState<
     Record<string, { width: number; height: number }>
   >({})
+  const [imageRotationByProduct, setImageRotationByProduct] = useState<
+    Record<string, number>
+  >({})
   const [isPreparingPdfImages, setIsPreparingPdfImages] = useState(false)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const imageBase64Cache = useRef<Record<string, string>>({})
@@ -31,6 +35,7 @@ export const Reports = () => {
       ...product,
       imageWidth: Math.max(100, size.width),
       imageHeight: Math.max(100, size.height),
+      imageRotation: imageRotationByProduct[product.id] ?? 0,
     }
   })
 
@@ -39,7 +44,7 @@ export const Reports = () => {
       pdfProducts
         .map(
           (item) =>
-            `${item.id}:${item.imageWidth ?? 100}x${item.imageHeight ?? 100}:${item.image?.length ?? 0}`
+            `${item.id}:${item.imageWidth ?? 100}x${item.imageHeight ?? 100}:r${item.imageRotation ?? 0}:${item.image?.length ?? 0}`
         )
         .join('|'),
     [pdfProducts]
@@ -51,6 +56,17 @@ export const Reports = () => {
       relatoriosList.forEach((item) => {
         const key = item.productId
         next[key] = current[key] ?? { width: 100, height: 100 }
+      })
+      return next
+    })
+  }, [relatoriosList])
+
+  useEffect(() => {
+    setImageRotationByProduct((current) => {
+      const next: Record<string, number> = {}
+      relatoriosList.forEach((item) => {
+        const key = item.productId
+        next[key] = current[key] ?? 0
       })
       return next
     })
@@ -147,6 +163,10 @@ export const Reports = () => {
     moveRelatorioItem(productId, 'down')
   }
 
+  const handleMoveToPosition = (productId: string, position: number) => {
+    moveRelatorioItemToPosition(productId, position)
+  }
+
   const handleClear = () => {
     const shouldClear = window.confirm('Limpar todos os itens de Relatorios?')
     if (!shouldClear) {
@@ -175,6 +195,13 @@ export const Reports = () => {
             ? parsedValue
             : current[productId]?.height ?? 0,
       },
+    }))
+  }
+
+  const handleRotateImage = (productId: string) => {
+    setImageRotationByProduct((current) => ({
+      ...current,
+      [productId]: ((current[productId] ?? 0) + 90) % 360,
     }))
   }
 
@@ -275,6 +302,26 @@ export const Reports = () => {
                 >
                   ↓
                 </button>
+                <div className={styles.positionControl}>
+                  <label htmlFor={`position-${item.productId}`}>Posição</label>
+                  <select
+                    id={`position-${item.productId}`}
+                    className={styles.positionSelect}
+                    value={index + 1}
+                    onChange={(event) =>
+                      handleMoveToPosition(item.productId, Number(event.target.value))
+                    }
+                  >
+                    {relatoriosList.map((_, optionIndex) => (
+                      <option
+                        key={`${item.productId}-${optionIndex + 1}`}
+                        value={optionIndex + 1}
+                      >
+                        {optionIndex + 1}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <button
                   type="button"
                   className={styles.removeButton}
@@ -319,9 +366,17 @@ export const Reports = () => {
             </div>
 
             <div className={styles.sizeControlsList}>
-              {pdfProducts.map((item) => (
+              {pdfProducts.map((item, index) => (
                 <div key={item.id} className={styles.sizeControlRow}>
+                  <span className={styles.sizeControlPosition}>{index + 1}</span>
                   <span className={styles.sizeControlTitle}>{item.title}</span>
+                  <button
+                    type="button"
+                    className={styles.rotateButton}
+                    onClick={() => handleRotateImage(item.id)}
+                  >
+                    Rotacionar
+                  </button>
                   <label>
                     Largura:
                     <input
@@ -359,3 +414,6 @@ export const Reports = () => {
     </div>
   )
 }
+
+
+

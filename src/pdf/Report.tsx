@@ -10,6 +10,7 @@ export type ReportProduct = {
   value: number | string
   imageWidth?: number
   imageHeight?: number
+  imageRotation?: number
 }
 
 type ProductsReportProps = {
@@ -43,6 +44,20 @@ const normalizeImageUrl = (url: string) => {
   return trimmed
 }
 
+const clampArtworkSize = (size: number) => {
+  const parsed = Number(size)
+  if (!Number.isFinite(parsed)) {
+    return 100
+  }
+
+  return Math.max(100, Math.min(260, parsed))
+}
+
+const normalizeRotation = (rotation: number) => {
+  const normalized = Number.isFinite(rotation) ? rotation : 0
+  return ((normalized % 360) + 360) % 360
+}
+
 export const ProductsReport = ({ products }: ProductsReportProps) => {
   const totalValue = products.reduce(
     (sum, product) => sum + parseCurrencyToNumber(product.value),
@@ -74,44 +89,54 @@ export const ProductsReport = ({ products }: ProductsReportProps) => {
             <Text style={styles.thValue}>Valor</Text>
           </View>
 
-          {products.map((product, index) => (
-            <View key={String(product.id)} style={styles.row}>
-              <View style={styles.cellNumber}>
-                <Text>{index + 1}</Text>
-              </View>
-              <View style={styles.cellArtwork}>
-                <View
-                  style={[
-                    styles.artworkImageBox,
-                    {
-                      width: Math.max(100, Number(product.imageWidth ?? 100)),
-                      height: Math.max(100, Number(product.imageHeight ?? 100)),
-                    },
-                  ]}
-                >
-                  {normalizeImageUrl(product.image) ? (
-                    <Image
-                      src={normalizeImageUrl(product.image)}
-                      style={{
-                        width: Math.max(100, Number(product.imageWidth ?? 100)),
-                        height: Math.max(100, Number(product.imageHeight ?? 100)),
-                        objectFit: 'contain',
-                      }}
-                    />
-                  ) : (
-                    <Text style={styles.imageFallback}>Sem imagem</Text>
-                  )}
+          {products.map((product, index) => {
+            const imageWidth = clampArtworkSize(product.imageWidth ?? 100)
+            const imageHeight = clampArtworkSize(product.imageHeight ?? 100)
+            const imageRotation = normalizeRotation(Number(product.imageRotation ?? 0))
+            const isQuarterTurn = imageRotation % 180 !== 0
+            const renderedImageWidth = isQuarterTurn ? imageHeight : imageWidth
+            const renderedImageHeight = isQuarterTurn ? imageWidth : imageHeight
+
+            return (
+              <View key={String(product.id)} style={styles.row} wrap={false}>
+                <View style={styles.cellNumber}>
+                  <Text>{index + 1}</Text>
+                </View>
+                <View style={styles.cellArtwork}>
+                  <View
+                    style={[
+                      styles.artworkImageBox,
+                      {
+                        width: imageWidth,
+                        height: imageHeight,
+                      },
+                    ]}
+                  >
+                    {normalizeImageUrl(product.image) ? (
+                      <Image
+                        src={normalizeImageUrl(product.image)}
+                        style={{
+                          width: renderedImageWidth,
+                          height: renderedImageHeight,
+                          objectFit: 'contain',
+                          transform: [{ operation: 'rotate', value: [imageRotation] }],
+                        }}
+                      />
+                    ) : (
+                      <Text style={styles.imageFallback}>Sem imagem</Text>
+                    )}
+                  </View>
+                </View>
+                <View style={styles.cellValue}>
+                  <Text>
+                    {formatCurrency(Number(product.value))}
+                  </Text>
                 </View>
               </View>
-              <View style={styles.cellValue}>
-                <Text>
-                  {formatCurrency(Number(product.value))}
-                </Text>
-              </View>
-            </View>
-          ))}
+            )
+          })}
 
-          <View style={styles.totalRow}>
+          <View style={styles.totalRow} wrap={false}>
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalValue}>{formatCurrency(totalValue)}</Text>
           </View>
