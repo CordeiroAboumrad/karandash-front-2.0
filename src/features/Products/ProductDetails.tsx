@@ -1,4 +1,4 @@
-import { PDFViewer } from '@react-pdf/renderer'
+import { PDFViewer, pdf } from '@react-pdf/renderer'
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Oval } from 'react-loader-spinner'
@@ -125,6 +125,29 @@ export const ProductDetails = () => {
       return
     }
     setShowPreviewModal(true)
+  }
+
+  const handleDownloadCertificate = async () => {
+    if (!imageBase64 || !certificateDocument || !product) {
+      toast.error('Selecione uma imagem para baixar o certificado')
+      return
+    }
+
+    try {
+      const blob = await pdf(certificateDocument).toBlob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      const safeTitle = product.title.replace(/[\\/:*?"<>|]/g, '-')
+
+      link.href = url
+      link.download = `certificado-${safeTitle}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(url)
+    } catch {
+      toast.error('Nao foi possivel gerar o certificado')
+    }
   }
 
   const certificateDocument = product ? (
@@ -313,9 +336,9 @@ export const ProductDetails = () => {
         </div>
 
         <div className={styles.certificateButtons}>
-          <button
+          {!isAndroidDevice && <button
             onClick={handlePreviewClick}
-            className={`${styles.previewButton} ${!imageBase64 || isAndroidDevice ? styles.disabled : ''}`}
+            className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
             title={
               !imageBase64
                 ? 'Selecione uma imagem primeiro para visualizar o certificado.'
@@ -326,14 +349,13 @@ export const ProductDetails = () => {
             disabled={!imageBase64}
           >
             Preview do Certificado
-          </button>
+          </button>}
           {isAndroidDevice && (
             <button
               type="button"
-              className={`${styles.pdfButton} ${styles.disabled}`}
-              onClick={() =>
-                toast.error('Selecione uma imagem para baixar o certificado')
-              }
+              className={`${styles.pdfButton} ${!imageBase64 ? styles.disabled : ''}`}
+              onClick={handleDownloadCertificate}
+              disabled={!imageBase64}
             >
               Baixar Certificado
             </button>
