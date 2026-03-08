@@ -116,6 +116,10 @@ export const Products = () => {
   }
 
   const handleOpenRelatorioModal = async (product: ProductSchema) => {
+    if (!product.value) {
+      toast.error('Este produto não possui valor definido. Não é possível adicionar ao relatório.')
+      return
+    }
     setRelatorioProduct(product)
     setRelatorioImages([])
     setSelectedRelatorioImage(null)

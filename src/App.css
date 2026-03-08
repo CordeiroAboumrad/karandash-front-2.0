@@ -1397,7 +1397,6 @@
   --message-text: var(--color);
   background: var(--message-background);
   display: flex;
-  margin-bottom: var(--spacing-scale-2x);
 }
 .br-message .content {
   color: var(--message-text);

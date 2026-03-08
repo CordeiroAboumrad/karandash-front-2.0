@@ -36,7 +36,7 @@ const normalizeImageUrl = (url: string) => {
     return `https:${trimmed}`
   }
 
-  if (trimmed.startsWith('http://')) {
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return trimmed.replace('http://', 'https://')
   }
 

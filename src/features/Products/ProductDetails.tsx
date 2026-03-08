@@ -64,7 +64,7 @@ export const ProductDetails = () => {
     try {
       await saveProductImage(product.id, selectedFiles)
       await imagesQuery.refetch()
-      toast.success(`${selectedFiles.length} ${selectedFiles.length === 1 ? 'imagem' : 'imagens'} carregadas com sucesso`, {
+      toast.success(`${selectedFiles.length} ${selectedFiles.length === 1 ? 'imagem carregada' : 'imagens carregadas'} com sucesso`, {
         icon: '✓',
       })
     } catch (error) {

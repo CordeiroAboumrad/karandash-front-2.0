@@ -11,13 +11,13 @@ export type NotificationProps = {
 export const pushNotification = ({
   state,
   message,
-  duration = 5000,
+  duration = 500000,
 }: NotificationProps) => {
   toast(message, { duration, icon: state })
 }
 
 export const pushApiNotification = ({ state, message }: NotificationProps) => {
-  toast(message, { duration: 5000, icon: state })
+  toast(message, { duration: 500000, icon: state })
 }
 
 export const clearNotifications = () => {
