@@ -96,7 +96,7 @@ export const Products = () => {
 
   const handleDeleteProduct = async (product: ProductSchema) => {
     const shouldDelete = window.confirm(
-      `Delete product "${product.title}"? This action cannot be undone.`
+      `Excluir produto "${product.title}"? Esta ação nao pode ser desfeita.`
     )
 
     if (!shouldDelete) {
@@ -109,7 +109,7 @@ export const Products = () => {
       await fetchProducts()
     } catch (error) {
       console.error(error)
-      toast.error('Could not delete product. Please try again.')
+      toast.error('Nao foi possível excluir o produto. Tente novamente.')
     } finally {
       setIsLoading(false)
     }

@@ -228,7 +228,7 @@ export const Reports = () => {
                     className={styles.downloadButton}
                     onClick={() => setShowPreviewModal(true)}
                   >
-                    Preview Relatorio
+                    Pré-visualizar Relatório
                   </button>
                 </>
               )}
@@ -345,7 +345,7 @@ export const Reports = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.previewHeader}>
-              <h3>Preview do Relatório</h3>
+              <h3>Pré-visualização do Relatório</h3>
               <div className={styles.previewActions}>
                 <PDFDownloadLink
                   key={`preview-${pdfRenderKey}`}

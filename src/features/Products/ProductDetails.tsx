@@ -156,7 +156,7 @@ export const ProductDetails = () => {
       imageWidth={imageWidth}
       imageHeight={imageHeight}
       title={product.title}
-      dimensions={product.measurements || 'N/A'}
+      dimensions={product.measurements || 'Não informado'}
       year={parseInt(product.productyear) || 0}
       technique={product.arttechnique}
       artist={product.artists?.name}
@@ -190,9 +190,9 @@ export const ProductDetails = () => {
   if (!product) {
     return (
       <div className={styles.productDetails}>
-        <h2>Product not found</h2>
+        <h2>Produto não encontrado</h2>
         <button onClick={() => navigate(-1)} className={styles.backButton}>
-          Back
+          Voltar
         </button>
       </div>
     )
@@ -202,7 +202,7 @@ export const ProductDetails = () => {
     <div className={styles.productDetails}>
       <div className={styles.buttonRow}>
         <button onClick={() => navigate(-1)} className={styles.backButton}>
-          ← Back
+          ← Voltar
         </button>
         {isUploading ? (
           <div className={styles.uploadingLoader}>
@@ -215,7 +215,7 @@ export const ProductDetails = () => {
           </div>
         ) : (
           <button onClick={handleUploadClick} className={styles.uploadButton}>
-            Upload Image
+            Enviar Imagem
           </button>
         )}
         <input
@@ -231,9 +231,9 @@ export const ProductDetails = () => {
       {showModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <h3>Confirm Upload</h3>
+            <h3>Confirmar Envio</h3>
             <p>
-              Tem certeza de que gostaria de realizar o upload de {selectedFiles.length} arquivo(s)?
+              Tem certeza de que gostaria de realizar o upload de {selectedFiles.length} {selectedFiles.length === 1 ? 'arquivo' : 'arquivos'}?
             </p>
             <div className={styles.fileList}>
               {selectedFiles.map((file, i) => (
@@ -321,7 +321,7 @@ export const ProductDetails = () => {
 
           <div className={styles.detailItem}>
             <strong>Vendido?</strong>
-            <span>{product.sold ? 'Yes' : 'No'}</span>
+            <span>{product.sold ? 'Sim' : 'Não'}</span>
           </div>
 
           <div className={styles.detailItem}>
@@ -331,7 +331,7 @@ export const ProductDetails = () => {
 
           <div className={styles.detailItem}>
             <strong>Atualizado em:</strong>
-            <span>{product.updatedat ? new Date(product.updatedat).toLocaleDateString() : 'NA'}</span>
+            <span>{product.updatedat ? new Date(product.updatedat).toLocaleDateString() : 'Não informado'}</span>
           </div>
         </div>
 
@@ -348,7 +348,7 @@ export const ProductDetails = () => {
             }
             disabled={!imageBase64}
           >
-            Preview do Certificado
+            Pré-visualização do Certificado
           </button>}
           {isAndroidDevice && (
             <button

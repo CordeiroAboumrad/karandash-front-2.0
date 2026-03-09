@@ -225,11 +225,11 @@ export const Users = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Nome</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
+                <th>Perfil</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -365,14 +365,14 @@ export const Users = () => {
                   onClick={closeModal}
                   className={styles.cancelButton}
                 >
-                  Cancel
+                  Cancelar
                 </button>
                 <button
                   type="submit"
                   className={styles.submitButton}
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Saving...' : 'Save'}
+                  {isSaving ? 'Salvando...' : 'Salvar'}
                 </button>
               </div>
             </form>

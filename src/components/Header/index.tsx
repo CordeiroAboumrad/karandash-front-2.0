@@ -74,7 +74,7 @@ export const Header = () => {
           </Link>
         )}
         <button onClick={handleLogout} className={styles.navLink}>
-          Logout
+          Sair
         </button>
       </nav>
     </header>

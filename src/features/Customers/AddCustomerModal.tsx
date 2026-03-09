@@ -63,14 +63,14 @@ export const AddCustomerModal = ({
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>{editData ? 'Edit Customer' : 'Add New Customer'}</h2>
+        <h2>{editData ? 'Editar Cliente' : 'Adicionar Novo Cliente'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Nome*</label>
             <input
               id="name"
               type="text"
-              {...register('customerName', { required: 'Name is required' })}
+              {...register('customerName', { required: 'Nome é obrigatório' })}
             />
             {errors.customerName && (
               <span className={styles.error}>

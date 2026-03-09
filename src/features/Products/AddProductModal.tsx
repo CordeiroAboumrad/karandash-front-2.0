@@ -85,7 +85,7 @@ export const AddProductModal = ({
             <input
               id="title"
               type="text"
-              {...register('title', { required: 'Title is required' })}
+              {...register('title', { required: 'Título é obrigatório' })}
             />
             {errors.title && (
               <span className={styles.error}>{errors.title.message}</span>

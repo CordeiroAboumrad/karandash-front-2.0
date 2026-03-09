@@ -69,14 +69,14 @@ export const AddArtistModal = ({
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>{editData ? 'Edit Artist' : 'Add New Artist'}</h2>
+        <h2>{editData ? 'Editar Artista' : 'Adicionar Novo Artista'}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Nome*</label>
             <input
               id="name"
               type="text"
-              {...register('artistName', { required: 'Name is required' })}
+              {...register('artistName', { required: 'Nome é obrigatório' })}
             />
             {errors.artistName && (
               <span className={styles.error}>{errors.artistName.message}</span>
@@ -92,7 +92,7 @@ export const AddArtistModal = ({
             <label htmlFor="gender">Genero</label>
             <select
               id="gender"
-              {...register('gender', { required: 'Genero is required' })}
+              {...register('gender', { required: 'Gênero é obrigatório' })}
               defaultValue=""
             >
               <option value="" disabled>

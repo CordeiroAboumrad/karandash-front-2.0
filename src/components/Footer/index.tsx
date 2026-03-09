@@ -1,4 +1,4 @@
-import { version } from '../../../package.json'
+﻿import { version } from '../../../package.json'
 import karandashLogo from '../../assets/karandash.png'
 
 import styles from './Footer.module.css'
@@ -17,9 +17,10 @@ export const Footer = () => {
               <img src={karandashLogo} alt="link acesso informacao" />
             </a>
           </div>
-          <div className={styles.versionInfo}>Versão: Frontend: {version}</div>
+          <div className={styles.versionInfo}>Versão do frontend: {version}</div>
         </div>
       </div>
     </footer>
   )
 }
+
