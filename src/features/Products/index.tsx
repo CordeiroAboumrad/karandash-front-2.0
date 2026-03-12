@@ -42,6 +42,8 @@ export const Products = () => {
   )
   const [isRelatorioModalOpen, setIsRelatorioModalOpen] = useState(false)
   const [isLoadingRelatorioImages, setIsLoadingRelatorioImages] = useState(false)
+  const [productImages, setProductImages] = useState<Record<string, string | null>>({})
+  const [productImageLoaded, setProductImageLoaded] = useState<Record<string, boolean>>({})
   const navigate = useNavigate()
 
   const isProductInRelatorio = (productId: string) =>
@@ -71,6 +73,62 @@ export const Products = () => {
     fetchProducts()
   }, [page, size])
 
+  useEffect(() => {
+    if (!products?.content?.length) {
+      return
+    }
+
+    let isActive = true
+
+    const loadProductImages = async () => {
+      const imageEntries = await Promise.all(
+        products.content.map(async (product: ProductSchema) => {
+          try {
+            const images = await getProductImages(product.id)
+            if (!Array.isArray(images) || images.length === 0) {
+              return [product.id, null] as const
+            }
+
+            const sortedImages = [...images].sort(
+              (a: ProductImage, b: ProductImage) =>
+                Number(a.mediadisplayposition ?? 0) - Number(b.mediadisplayposition ?? 0)
+            )
+
+            return [product.id, sortedImages[0]?.mediaurl ?? null] as const
+          } catch (error) {
+            console.error(error)
+            return [product.id, null] as const
+          }
+        })
+      )
+
+      if (!isActive) {
+        return
+      }
+
+      setProductImages((current) => {
+        const next = { ...current }
+        imageEntries.forEach(([id, url]) => {
+          next[id] = url
+        })
+        return next
+      })
+      setProductImageLoaded((current) => {
+        const next = { ...current }
+        imageEntries.forEach(([id, url]) => {
+          next[id] = url ? false : true
+        })
+        return next
+      })
+    }
+
+    loadProductImages()
+
+    return () => {
+      isActive = false
+    }
+  }, [products?.content])
+
   const handleSearch = () => {
     setPage(0)
     fetchProducts()
@@ -86,6 +144,7 @@ export const Products = () => {
   }
 
   const handleSuccess = () => {
+    if (!!artist || !!name || !!minPrice || !!maxPrice || soldFilter !== 'all') return
     fetchProducts()
   }
 
@@ -182,6 +241,11 @@ export const Products = () => {
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
           className={styles.searchInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch()
+            }
+          }}
         />
         <input
           type="text"
@@ -189,6 +253,11 @@ export const Products = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={styles.searchInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch()
+            }
+          }}
         />
         <input
           type="number"
@@ -196,6 +265,11 @@ export const Products = () => {
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className={styles.searchInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch()
+            }
+          }}
         />
         <input
           type="number"
@@ -203,6 +277,11 @@ export const Products = () => {
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className={styles.searchInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch()
+            }
+          }}
         />
         <select
           value={soldFilter}
@@ -271,31 +350,65 @@ export const Products = () => {
                           <strong>Descrição:</strong>
                         </div>
                       </div>
-                      <p className={styles.descriptionText}>
-                        {product.description}
-                      </p>
-                      <p>
-                        <strong>Artista:</strong> {product.artists?.name || 'Desconhecido'}
-                      </p>
-                      <p>
-                        <strong>Tipo:</strong> {product.type}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {product.status}
-                      </p>
-                      <p>
-                        <strong>Técnica:</strong> {product.arttechnique}
-                      </p>
-                      <p>
-                        <strong>Ano:</strong> {product.productyear}
-                      </p>
-                      <p>
-                        <strong>Valor:</strong> {!product.value ? 'Não informado' : formatCurrency(Number(product.value))}
-                      </p>
-                      <p>
-                        <strong>Vendido:</strong>{' '}
-                        {product.status == 'sold' ? 'Sim' : 'Não'}
-                      </p>
+                      <div className={styles.infoRow}>
+                        <div className={styles.productImageWrapper}>
+                          {productImageLoaded[product.id] !== true && (
+                            <div className={styles.thumbnailLoader}>
+                              <Oval
+                                height={28}
+                                width={28}
+                                color="#cc0000"
+                                secondaryColor="#cc0000"
+                              />
+                            </div>
+                          )}
+                          <img
+                            src={productImages[product.id] as string}
+                            alt={`Imagem de ${product.title}`}
+                            className={`${styles.productThumbnail} ${productImageLoaded[product.id] === true ? '' : styles.productThumbnailLoading}`}
+                            loading="lazy"
+                            onLoad={() =>
+                              setProductImageLoaded((current) => ({
+                                ...current,
+                                [product.id]: true,
+                              }))
+                            }
+                            onError={() =>
+                              setProductImageLoaded((current) => ({
+                                ...current,
+                                [product.id]: true,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className={styles.infoDetails}>
+                          <p className={styles.descriptionText}>
+                            {product.description}
+                          </p>
+                          <p>
+                            <strong>Artista:</strong> {product.artists?.name || 'Desconhecido'}
+                          </p>
+                          <p>
+                            <strong>Tipo:</strong> {product.type}
+                          </p>
+                          <p>
+                            <strong>Status:</strong> {product.status}
+                          </p>
+                          <p>
+                            <strong>Técnica:</strong> {product.arttechnique}
+                          </p>
+                          <p>
+                            <strong>Ano:</strong> {product.productyear}
+                          </p>
+                          <p>
+                            <strong>Valor:</strong> {!product.value ? 'Não informado' : formatCurrency(Number(product.value))}
+                          </p>
+                          <p>
+                            <strong>Vendido:</strong>{' '}
+                            {product.status == 'sold' ? 'Sim' : 'Não'}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className={styles.buttonGroup}>

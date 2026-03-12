@@ -7,7 +7,7 @@ import {
   useGetProductByIdQuery,
   useGetProductImagesQuery,
 } from '../../data/queries/karandashQueries'
-import { saveProductImage, getImageAsBase64 } from '../../data/apis/requests'
+import { deleteProductImage, getImageAsBase64, saveProductImage } from '../../data/apis/requests'
 import { Certificate } from '../../pdf/Certificate'
 import styles from './ProductDetails.module.css'
 import { formatCurrency } from '../../utils/formatCurrency'
@@ -23,6 +23,7 @@ export const ProductDetails = () => {
   const [imageBase64, setImageBase64] = useState<string>('')
   const [imageWidth, setImageWidth] = useState(180)
   const [imageHeight, setImageHeight] = useState(180)
+  const [deletingImages, setDeletingImages] = useState<Record<string, boolean>>({})
   const isAndroidDevice =
     typeof window !== 'undefined' && /Android/i.test(window.navigator.userAgent)
 
@@ -112,6 +113,33 @@ export const ProductDetails = () => {
     } catch (error) {
       toast.error('Falha ao carregar a imagem')
       setSelectedImageUrl('')
+    }
+  }
+
+  const handleDeleteImage = async (imageId: string, displayPosition: number) => {
+    if (!product) return
+
+    const shouldDelete = window.confirm('Excluir esta imagem? Esta ação nao pode ser desfeita.')
+    if (!shouldDelete) {
+      return
+    }
+
+    setDeletingImages((current) => ({ ...current, [imageId]: true }))
+    try {
+      await deleteProductImage(product.id, displayPosition)
+      const refreshed = await imagesQuery.refetch()
+      if (selectedImageUrl && refreshed.data) {
+        const stillExists = refreshed.data.some((img: any) => img.mediaurl === selectedImageUrl)
+        if (!stillExists) {
+          setSelectedImageUrl('')
+          setImageBase64('')
+        }
+      }
+      toast.success('Imagem removida com sucesso.')
+    } catch (error) {
+      toast.error('Nao foi possivel remover a imagem.')
+    } finally {
+      setDeletingImages((current) => ({ ...current, [imageId]: false }))
     }
   }
 
@@ -375,6 +403,22 @@ export const ProductDetails = () => {
                   className={`${styles.imageCard} ${selectedImageUrl === img.mediaurl ? styles.selected : ''}`}
                   onClick={() => handleImageSelect(img.mediaurl)}
                 >
+                  <button
+                    type="button"
+                    className={styles.deleteImageButton}
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      handleDeleteImage(String(img.id), img.mediadisplayposition)
+                    }}
+                    disabled={deletingImages[String(img.id)]}
+                    title="Excluir imagem"
+                  >
+                    {deletingImages[String(img.id)] ? (
+                      <Oval height={16} width={16} color="#ffffff" secondaryColor="#ffffff" />
+                    ) : (
+                      <i className="fa-solid fa-trash"></i>
+                    )}
+                  </button>
                   <img
                     src={img.mediaurl}
                     alt={`Produto ${img.mediadisplayposition}`}

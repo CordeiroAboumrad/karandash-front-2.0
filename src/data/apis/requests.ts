@@ -168,7 +168,7 @@ export const deleteProductImage = async (
   id: string,
   displayPosition: number
 ) => {
-  const res = await karandashClient.delete('/product/delete-product', {
+  const res = await karandashClient.delete('/product/product-image', {
     data: {
       productId: id,
       displayPosition: displayPosition,
