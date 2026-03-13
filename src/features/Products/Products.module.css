@@ -168,7 +168,7 @@
 .infoRow {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .productImageWrapper {
@@ -178,6 +178,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  align-self: center;
 }
 
 .productThumbnail {
@@ -205,6 +206,18 @@
 .infoDetails {
   flex: 1;
   min-width: 0;
+}
+
+.infoDetails p:not(.descriptionText) {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: flex-start;
+  column-gap: 0.75rem;
+  text-align: left;
+}
+
+.infoDetails p:not(.descriptionText) strong {
+  text-align: left;
 }
 
 .magnifierButton {
