@@ -50,6 +50,19 @@ export const AddProductModal = ({
     }
   }, [editData, setValue, reset])
 
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const onSubmit = async (data: Product) => {
@@ -74,6 +87,14 @@ export const AddProductModal = ({
   const artists: ArtistOption[] = (artistsQuery.data ?? []).filter(
     (artist): artist is ArtistOption => artist != null
   )
+
+  const sanitizeNumericInput = (value: string) => {
+    const normalized = value.replace(',', '.')
+    const cleaned = normalized.replace(/[^0-9.]/g, '')
+    const [whole, ...rest] = cleaned.split('.')
+    if (rest.length === 0) return cleaned
+    return `${whole}.${rest.join('')}`
+  }
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -169,9 +190,22 @@ export const AddProductModal = ({
             <label htmlFor="value">Valor</label>
             <input
               id="value"
-              type="number"
-              step="0.01"
-              {...register('value', { valueAsNumber: true })}
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9]*[.,]?[0-9]*"
+              {...register('value', {
+                setValueAs: (value) => {
+                  if (typeof value !== 'string') return value
+                  const normalized = value.replace(',', '.')
+                  return normalized === '' ? undefined : Number(normalized)
+                },
+                onChange: (event) => {
+                  const sanitized = sanitizeNumericInput(event.target.value)
+                  if (sanitized !== event.target.value) {
+                    event.target.value = sanitized
+                  }
+                },
+              })}
             />
           </div>
 
