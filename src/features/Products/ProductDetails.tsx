@@ -185,7 +185,7 @@ export const ProductDetails = () => {
       imageHeight={imageHeight}
       title={product.title}
       dimensions={product.measurements || 'Não informado'}
-      year={parseInt(product.productyear) || 0}
+      year={product.productyear || 0}
       technique={product.arttechnique}
       artist={product.artists?.name}
       artistGender={product.artists?.gender}
