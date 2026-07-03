@@ -12,6 +12,7 @@ export type RelatorioItem = {
   value: number
   imageUrl: string
   addedAt: string
+  measurements?: string
 }
 
 type Atom<T> = {
@@ -20,7 +21,7 @@ type Atom<T> = {
   subscribe: (listener: () => void) => () => void
 }
 
-const createAtom = <T,>(initialValue: T): Atom<T> => {
+const createAtom = <T>(initialValue: T): Atom<T> => {
   let value = initialValue
   const listeners = new Set<() => void>()
 

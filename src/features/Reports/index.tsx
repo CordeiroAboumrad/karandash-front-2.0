@@ -17,7 +17,7 @@ export const Reports = () => {
   const navigate = useNavigate()
   const relatoriosList = useRelatoriosList()
   const [pdfProductsBase, setPdfProductsBase] = useState<
-    { id: string; title: string; image: string; value: number }[]
+    { id: string; title: string; image: string; value: number; measurements?: string }[]
   >([])
   const [imageSizeByProduct, setImageSizeByProduct] = useState<
     Record<string, { width: number; height: number }>
@@ -110,6 +110,7 @@ export const Reports = () => {
               title: item.title,
               image: cached,
               value: item.value,
+              measurements: item.measurements,
             }
           }
 
@@ -124,6 +125,7 @@ export const Reports = () => {
               title: item.title,
               image: base64 || item.imageUrl,
               value: item.value,
+              measurements: item.measurements,
             }
           } catch {
             return {
@@ -131,6 +133,7 @@ export const Reports = () => {
               title: item.title,
               image: item.imageUrl,
               value: item.value,
+              measurements: item.measurements,
             }
           }
         })

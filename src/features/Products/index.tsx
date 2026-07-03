@@ -222,6 +222,7 @@ export const Products = () => {
       value: relatorioProduct.value,
       imageUrl: selectedRelatorioImage,
       addedAt: new Date().toISOString(),
+      measurements: relatorioProduct.measurements,
     })
 
     toast.success('Produto adicionado ao relatorio com sucesso.')

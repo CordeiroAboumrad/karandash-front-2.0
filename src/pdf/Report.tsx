@@ -11,6 +11,7 @@ export type ReportProduct = {
   imageWidth?: number
   imageHeight?: number
   imageRotation?: number
+  measurements?: string
 }
 
 type ProductsReportProps = {
@@ -86,6 +87,7 @@ export const ProductsReport = ({ products }: ProductsReportProps) => {
           <View style={styles.tableHeader}>
             <Text style={styles.thNumber}>#</Text>
             <Text style={styles.thArtwork}>Obra</Text>
+            <Text style={styles.thMeasurements}>Medidas</Text>
             <Text style={styles.thValue}>Valor</Text>
           </View>
 
@@ -126,6 +128,9 @@ export const ProductsReport = ({ products }: ProductsReportProps) => {
                       <Text style={styles.imageFallback}>Sem imagem</Text>
                     )}
                   </View>
+                </View>
+                <View style={styles.cellMeasurements}>
+                  <Text>{product.measurements ?? '—'}</Text>
                 </View>
                 <View style={styles.cellValue}>
                   <Text>
