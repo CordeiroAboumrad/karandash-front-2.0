@@ -364,7 +364,7 @@ export const ProductDetails = () => {
         </div>
 
         <div className={styles.certificateButtons}>
-          {!isAndroidDevice && <button
+          <button
             onClick={handlePreviewClick}
             className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
             title={
@@ -377,7 +377,7 @@ export const ProductDetails = () => {
             disabled={!imageBase64}
           >
             Pré-visualização do Certificado
-          </button>}
+          </button>
           {isAndroidDevice && (
             <button
               type="button"
