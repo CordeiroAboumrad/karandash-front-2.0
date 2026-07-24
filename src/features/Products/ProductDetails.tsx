@@ -26,6 +26,11 @@ export const ProductDetails = () => {
   const [deletingImages, setDeletingImages] = useState<Record<string, boolean>>({})
   const isAndroidDevice =
     typeof window !== 'undefined' && /Android/i.test(window.navigator.userAgent)
+  const isIOSDevice =
+    typeof window !== 'undefined' &&
+    (/iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
+      (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1))
+  const usePdfDownload = isAndroidDevice || isIOSDevice
 
   const navigate = useNavigate()
   const productQuery = useGetProductByIdQuery(id || '')
@@ -148,10 +153,6 @@ export const ProductDetails = () => {
       toast.error('Selecione uma imagem para visualizar o certificado')
       return
     }
-    if (isAndroidDevice) {
-      toast('No Android, use o botao "Baixar Certificado".')
-      return
-    }
     setShowPreviewModal(true)
   }
 
@@ -164,15 +165,33 @@ export const ProductDetails = () => {
     try {
       const blob = await pdf(certificateDocument).toBlob()
       const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
       const safeTitle = product.title.replace(/[\\/:*?"<>|]/g, '-')
 
-      link.href = url
-      link.download = `certificado-${safeTitle}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      URL.revokeObjectURL(url)
+      if (usePdfDownload) {
+        // Em mobile, abrir em nova aba abre o visualizador de PDF nativo
+        const newTab = window.open('', '_blank')
+        if (newTab) {
+          newTab.location.href = url
+          setTimeout(() => URL.revokeObjectURL(url), 10000)
+        } else {
+          // Fallback se popup foi bloqueado: forçar download
+          const link = document.createElement('a')
+          link.href = url
+          link.download = `certificado-${safeTitle}.pdf`
+          document.body.appendChild(link)
+          link.click()
+          link.remove()
+          URL.revokeObjectURL(url)
+        }
+      } else {
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `certificado-${safeTitle}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        URL.revokeObjectURL(url)
+      }
     } catch {
       toast.error('Nao foi possivel gerar o certificado')
     }
@@ -364,28 +383,28 @@ export const ProductDetails = () => {
         </div>
 
         <div className={styles.certificateButtons}>
-          <button
-            onClick={handlePreviewClick}
-            className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
-            title={
-              !imageBase64
-                ? 'Selecione uma imagem primeiro para visualizar o certificado.'
-                : isAndroidDevice
-                  ? 'No Android, baixe o certificado.'
+          {!usePdfDownload && (
+            <button
+              onClick={handlePreviewClick}
+              className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
+              title={
+                !imageBase64
+                  ? 'Selecione uma imagem primeiro para visualizar o certificado.'
                   : undefined
-            }
-            disabled={!imageBase64}
-          >
-            Pré-visualização do Certificado
-          </button>
-          {isAndroidDevice && (
+              }
+              disabled={!imageBase64}
+            >
+              Pré-visualização do Certificado
+            </button>
+          )}
+          {usePdfDownload && (
             <button
               type="button"
               className={`${styles.pdfButton} ${!imageBase64 ? styles.disabled : ''}`}
               onClick={handleDownloadCertificate}
               disabled={!imageBase64}
             >
-              Baixar Certificado
+              Visualizar Certificado
             </button>
           )}
         </div>

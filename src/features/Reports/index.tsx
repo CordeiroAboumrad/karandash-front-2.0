@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer'
+import { PDFDownloadLink, PDFViewer, pdf } from '@react-pdf/renderer'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { getImageAsBase64 } from '../../data/apis/requests'
 import { ProductsReport } from '../../pdf/Report'
@@ -12,6 +13,11 @@ import {
   removeFromRelatoriosList,
   useRelatoriosList,
 } from './relatoriosListStore'
+
+const isMobileDevice =
+  typeof window !== 'undefined' &&
+  (/Android|iPhone|iPad|iPod/.test(window.navigator.userAgent) ||
+    (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1))
 
 export const Reports = () => {
   const navigate = useNavigate()
@@ -206,6 +212,36 @@ export const Reports = () => {
       ...current,
       [productId]: ((current[productId] ?? 0) + 90) % 360,
     }))
+  }
+
+  const handleOpenPdfMobile = async () => {
+    if (pdfProducts.length === 0) return
+
+    // window.open deve ser chamado ANTES de qualquer await,
+    // senão o browser mobile bloqueia como popup
+    const newTab = window.open('', '_blank')
+
+    try {
+      const blob = await pdf(<ProductsReport products={pdfProducts} />).toBlob()
+      const url = URL.createObjectURL(blob)
+
+      if (newTab) {
+        newTab.location.href = url
+        setTimeout(() => URL.revokeObjectURL(url), 10000)
+      } else {
+        // Fallback se popup foi bloqueado: forçar download
+        const link = document.createElement('a')
+        link.href = url
+        link.download = 'lista-obras.pdf'
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        URL.revokeObjectURL(url)
+      }
+    } catch {
+      newTab?.close()
+      toast.error('Não foi possível gerar o relatório')
+    }
   }
 
   return (
@@ -408,9 +444,24 @@ export const Reports = () => {
               ))}
             </div>
 
-            <PDFViewer className={styles.pdfViewer} key={pdfRenderKey}>
-              <ProductsReport products={pdfProducts} />
-            </PDFViewer>
+            {isMobileDevice ? (
+              <div className={styles.mobilePreview}>
+                <p className={styles.mobileNote}>
+                  Ajuste os tamanhos acima e toque em "Visualizar PDF" para abrir no visualizador do dispositivo.
+                </p>
+                <button
+                  type="button"
+                  className={styles.downloadButton}
+                  onClick={handleOpenPdfMobile}
+                >
+                  Visualizar PDF
+                </button>
+              </div>
+            ) : (
+              <PDFViewer className={styles.pdfViewer} key={pdfRenderKey}>
+                <ProductsReport products={pdfProducts} />
+              </PDFViewer>
+            )}
           </div>
         </div>
       )}
