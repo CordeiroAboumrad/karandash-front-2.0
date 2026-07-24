@@ -193,7 +193,9 @@
   justify-content: center;
   cursor: pointer;
   z-index: 2;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
 .deleteImageButton:hover:not(:disabled) {
@@ -462,4 +464,22 @@
   .modalButtons {
     flex-direction: column;
   }
+}
+
+.mobileViewerPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex: 1;
+  padding: 2rem 1rem;
+}
+
+.mobileViewerNote {
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 320px;
 }

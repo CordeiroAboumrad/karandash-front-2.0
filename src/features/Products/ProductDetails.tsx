@@ -162,14 +162,16 @@ export const ProductDetails = () => {
       return
     }
 
+    // Em mobile, window.open DEVE ser chamado antes de qualquer await,
+    // senão o browser interpreta como popup não solicitado e bloqueia
+    const newTab = usePdfDownload ? window.open('', '_blank') : null
+
     try {
       const blob = await pdf(certificateDocument).toBlob()
       const url = URL.createObjectURL(blob)
       const safeTitle = product.title.replace(/[\\/:*?"<>|]/g, '-')
 
       if (usePdfDownload) {
-        // Em mobile, abrir em nova aba abre o visualizador de PDF nativo
-        const newTab = window.open('', '_blank')
         if (newTab) {
           newTab.location.href = url
           setTimeout(() => URL.revokeObjectURL(url), 10000)
@@ -193,6 +195,7 @@ export const ProductDetails = () => {
         URL.revokeObjectURL(url)
       }
     } catch {
+      newTab?.close()
       toast.error('Nao foi possivel gerar o certificado')
     }
   }
@@ -383,30 +386,18 @@ export const ProductDetails = () => {
         </div>
 
         <div className={styles.certificateButtons}>
-          {!usePdfDownload && (
-            <button
-              onClick={handlePreviewClick}
-              className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
-              title={
-                !imageBase64
-                  ? 'Selecione uma imagem primeiro para visualizar o certificado.'
-                  : undefined
-              }
-              disabled={!imageBase64}
-            >
-              Pré-visualização do Certificado
-            </button>
-          )}
-          {usePdfDownload && (
-            <button
-              type="button"
-              className={`${styles.pdfButton} ${!imageBase64 ? styles.disabled : ''}`}
-              onClick={handleDownloadCertificate}
-              disabled={!imageBase64}
-            >
-              Visualizar Certificado
-            </button>
-          )}
+          <button
+            onClick={handlePreviewClick}
+            className={`${styles.previewButton} ${!imageBase64 ? styles.disabled : ''}`}
+            title={
+              !imageBase64
+                ? 'Selecione uma imagem primeiro para visualizar o certificado.'
+                : undefined
+            }
+            disabled={!imageBase64}
+          >
+            {usePdfDownload ? 'Visualizar Certificado' : 'Pré-visualização do Certificado'}
+          </button>
         </div>
 
         {imagesQuery.data && imagesQuery.data.length > 0 && (
@@ -496,13 +487,28 @@ export const ProductDetails = () => {
                 ×
               </button>
             </div>
-            {certificateDocument && (
-              <PDFViewer
-                className={styles.pdfViewer}
-                key={`${imageBase64}-${imageWidth}-${imageHeight}`}
-              >
-                {certificateDocument}
-              </PDFViewer>
+            {usePdfDownload ? (
+              <div className={styles.mobileViewerPanel}>
+                <p className={styles.mobileViewerNote}>
+                  Ajuste largura, altura e rotação acima, depois toque em "Abrir PDF" para visualizar no seu dispositivo.
+                </p>
+                <button
+                  type="button"
+                  className={styles.pdfButton}
+                  onClick={handleDownloadCertificate}
+                >
+                  Abrir PDF
+                </button>
+              </div>
+            ) : (
+              certificateDocument && (
+                <PDFViewer
+                  className={styles.pdfViewer}
+                  key={`${imageBase64}-${imageWidth}-${imageHeight}`}
+                >
+                  {certificateDocument}
+                </PDFViewer>
+              )
             )}
           </div>
         </div>
